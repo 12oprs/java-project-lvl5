@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'application'
+	id 'jacoco'
 }
 
 group = 'hexlet.code'
@@ -25,3 +26,9 @@ tasks.named('test') {
 
 task stage(dependsOn: ['installDist', 'clean'])
 installDist.mustRunAfter clean
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+}
