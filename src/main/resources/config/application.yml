@@ -1,3 +1,5 @@
+base-url: /api
+
 spring:
   application:
     name: app
