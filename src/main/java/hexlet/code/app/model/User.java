@@ -1,5 +1,8 @@
 package hexlet.code.app.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Column;
@@ -18,6 +21,8 @@ import lombok.Setter;
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -33,8 +38,14 @@ public class User {
     private String password;
 
     @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
+    @CreationTimestamp
     private Date createdAt;
+
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
 
 }
