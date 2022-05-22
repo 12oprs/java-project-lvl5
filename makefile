@@ -1,6 +1,6 @@
 #Makefile
 
-.DEFAULT_GOAL:=start
+.DEFAULT_GOAL:=list
 
 clean:
 	./gradlew clean
