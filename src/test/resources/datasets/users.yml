@@ -1,0 +1,11 @@
+users:
+  - id: 1
+    first_name: Ivan
+    last_name: Ivanov
+    email: ivanov@mail.ru
+    password: 12345
+  - id: 2
+    first_name: Petr
+    last_name: Petrov
+    email: petrov@mail.ru
+    password: 54321
