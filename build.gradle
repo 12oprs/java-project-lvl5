@@ -6,6 +6,8 @@ plugins {
 	id 'jacoco'
 	id 'checkstyle'
 	id 'org.liquibase.gradle' version '2.1.0'
+
+	id 'com.adarshr.test-logger' version '3.0.0'
 }
 
 group = 'hexlet.code'
@@ -67,4 +69,12 @@ liquibase {
 					'&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy'
 		}
 	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+testlogger {
+	showStandardStreams = true
 }
