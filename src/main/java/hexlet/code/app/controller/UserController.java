@@ -12,8 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "${base-url}" + "/users")
-public class UserController {
+@RequestMapping(value = "api/users")
+public final class UserController {
 
     @Autowired
     private UserService service;
