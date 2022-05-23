@@ -1,11 +1,11 @@
 package hexlet.code.app.controller;
 
 import hexlet.code.app.dto.UserCreationDTO;
-import hexlet.code.app.dto.UserDTO;
 import hexlet.code.app.model.User;
 import hexlet.code.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,7 +19,7 @@ public class UserController {
     private UserService service;
 
     @GetMapping
-    public List<User> getUsers () {
+    public List<User> getUsers() {
         return service.getUsers();
     }
 
@@ -36,8 +36,9 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody UserCreationDTO user) {
-        return service.createUser(user);
+    @ResponseStatus(HttpStatus.CREATED)
+    public User createUser(@RequestBody UserCreationDTO dto) {
+        return service.createUser(dto);
     }
 
     @PatchMapping("/{id}")
@@ -54,6 +55,11 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable long id) {
-        return service.deleteUser(id);
+        try {
+            return service.deleteUser(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, e.getMessage(), e);
+        }
     }
 }
