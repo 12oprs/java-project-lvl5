@@ -53,7 +53,7 @@ public final class UserControllerTest {
     @BeforeAll
     static void init() throws IOException {
         testUserDTO = mapper.readValue(
-                new File(workDir +"/src/test/resources/datasets/testUserDTO"),
+                new File(workDir + "/src/test/resources/datasets/testUserDTO"),
                 UserCreationDTO.class);
         expectedUser = new User(testUserDTO);
     }
