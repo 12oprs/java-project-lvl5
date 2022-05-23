@@ -1,12 +1,12 @@
 databaseChangeLog:
 - changeSet:
-    id: 1652485897852-1
+    id: 1653208524582-1
     author: user (generated)
     changes:
     - createSequence:
         sequenceName: hibernate_sequence
 - changeSet:
-    id: 1652485897852-2
+    id: 1653208524582-2
     author: user (generated)
     changes:
     - createTable:
@@ -33,5 +33,13 @@ databaseChangeLog:
         - column:
             name: password
             type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1653208524582-3
+    author: user (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: id
+        constraintName: UC_USERSID_COL
         tableName: users
 

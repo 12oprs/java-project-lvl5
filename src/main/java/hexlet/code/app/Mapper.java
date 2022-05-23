@@ -6,7 +6,7 @@ import hexlet.code.app.model.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Mapper {
+public final class Mapper {
 
     public UserDTO toDTO(User user) {
         return new UserDTO(user.getFirstName(),
@@ -14,10 +14,7 @@ public class Mapper {
                 user.getEmail());
     }
 
-    public User toUser(UserCreationDTO userCreationDTO) {
-        return new User(userCreationDTO.getFirstName(),
-                userCreationDTO.getLastName(),
-                userCreationDTO.getEmail(),
-                userCreationDTO.getPassword());
+    public User toUser(UserCreationDTO dto) {
+        return new User(dto);
     }
 }
