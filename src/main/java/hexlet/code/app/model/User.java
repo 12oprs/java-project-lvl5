@@ -41,7 +41,6 @@ public class User {
     private String email;
 
     @NotNull
-    @Column(length = 3)
     @JsonIgnore
     private String password;
 

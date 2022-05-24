@@ -3,6 +3,7 @@ package hexlet.code.app.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
+import hexlet.code.app.config.TestConfig;
 import hexlet.code.app.dto.UserCreationDTO;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +22,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static hexlet.code.app.config.TestConfig.TEST_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -32,7 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@SpringBootTest
+@ActiveProfiles(TEST_PROFILE)
+@SpringBootTest(webEnvironment = RANDOM_PORT, classes = TestConfig.class)
 @Transactional
 @DBRider
 @DataSet("users.yml")
@@ -48,12 +53,12 @@ public final class UserControllerTest {
 
     private static UserCreationDTO testUserDTO;
     private static User expectedUser;
-    private static String workDir = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
     @BeforeAll
     static void init() throws IOException {
         testUserDTO = mapper.readValue(
-                new File(workDir + "/src/test/resources/datasets/testUserDTO"),
+                new File(WORK_DIR + "/src/test/resources/datasets/testUserDTO"),
                 UserCreationDTO.class);
         expectedUser = new User(testUserDTO);
     }

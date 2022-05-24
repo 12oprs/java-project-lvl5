@@ -9,6 +9,6 @@
     <!--  -->
     <suppress checks="DesignForExtension"
               files="AppApplication.java|SecurityConfig.java|
-                    |WebConfig.java"/>
+                    |WebConfig.java|TestConfig.java"/>
 
 </suppressions>
