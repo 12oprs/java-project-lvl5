@@ -2,10 +2,12 @@ package hexlet.code.app.controller;
 
 import hexlet.code.app.dto.UserCreationDTO;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,10 +24,17 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "${base-url}" + "/users")
-public final class UserController {
+public class UserController<ONLY_OWNER_BY_ID> {
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private static final String ONLY_OWNER_BY_ID = """
+            @userRepository.findById(#id).get().getEmail() == authentication.getName()
+        """;
 
     @GetMapping
     public List<User> getUsers() {
@@ -33,6 +42,7 @@ public final class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize(ONLY_OWNER_BY_ID)
     public User getUser(@PathVariable long id) {
         User user = null;
         try {
@@ -46,11 +56,12 @@ public final class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody UserCreationDTO dto) {
+    public User registration(@RequestBody UserCreationDTO dto) {
         return service.createUser(dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize(ONLY_OWNER_BY_ID)
     public User updateUser(@PathVariable long id, @RequestBody UserCreationDTO dto) {
         User user = null;
         try {
@@ -63,6 +74,7 @@ public final class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize(ONLY_OWNER_BY_ID)
     public String deleteUser(@PathVariable long id) {
         try {
             return service.deleteUser(id);

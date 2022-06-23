@@ -6,14 +6,19 @@ import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static hexlet.code.app.config.SecurityConfig.DEFAULT_AUTHORITIES;
+
 @Service
 @AllArgsConstructor
-public final class UserService {
+public final class UserService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
     @Autowired
@@ -49,5 +54,20 @@ public final class UserService {
             return "User deleted";
         }
         throw new Exception("Can't delete. User not exist");
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        return repository.findByEmail(username)
+                .map(this:: buildSpringUser)
+                .orElseThrow(() -> new UsernameNotFoundException("Not found user with 'username': " + username));
+    }
+
+    private UserDetails buildSpringUser(final User user) {
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                DEFAULT_AUTHORITIES
+        );
     }
 }
