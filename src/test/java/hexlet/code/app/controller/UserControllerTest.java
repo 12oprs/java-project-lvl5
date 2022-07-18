@@ -1,5 +1,8 @@
 package hexlet.code.app.controller;
 
+
+import hexlet.code.app.TestUtils;
+import hexlet.code.app.component.JWTHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
@@ -16,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -25,8 +29,9 @@ import java.nio.file.Paths;
 import static hexlet.code.app.config.TestConfig.TEST_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+//import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+//import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -50,6 +55,12 @@ public final class UserControllerTest {
 
     @Autowired
     UserRepository repository;
+
+    @Autowired
+    JWTHelper jwtHelper;
+
+    @Autowired
+    TestUtils testUtils;
 
     private static UserCreationDTO testUserDTO;
     private static User expectedUser;
@@ -77,13 +88,13 @@ public final class UserControllerTest {
 
     @Test
     void testGetUserById() throws Exception {
-        MockHttpServletResponse response = mockMvc
-                .perform(get("/api/users/2"))
-                .andDo(print())
-                .andExpectAll(status().isOk(),
-                        content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn()
-                .getResponse();
+        MockHttpServletResponse response =
+                testUtils.authorizedRequest(get("/api/users/2"), "petrov@mail.ru")
+                        .andDo(print())
+                        .andExpectAll(status().isOk(),
+                                content().contentType(MediaType.APPLICATION_JSON))
+                        .andReturn()
+                        .getResponse();
         assertThat(response.getContentAsString()).contains("Petrov");
         assertThat(response.getContentAsString()).doesNotContain("Ivanov");
     }
@@ -91,7 +102,7 @@ public final class UserControllerTest {
     @Test
     void testCreateUser() throws Exception {
         MockHttpServletResponse response = mockMvc
-                .perform(post("/api/users/")
+                .perform(post("/api/users")
                         .content(mapper.writeValueAsString(testUserDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -109,16 +120,14 @@ public final class UserControllerTest {
 
     @Test
     void testUpdateUser() throws Exception {
-        MockHttpServletResponse response = mockMvc
-                .perform(patch("/api/users/2")
-                        .content(mapper.writeValueAsString(testUserDTO))
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
+        MockHttpServletRequestBuilder updateRequest = patch("/api/users/2")
+                .content(mapper.writeValueAsString(testUserDTO))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        testUtils.authorizedRequest(updateRequest, "petrov@mail.ru")
                 .andDo(print())
                 .andExpectAll(status().isOk(),
-                        content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn()
-                .getResponse();
+                        content().contentType(MediaType.APPLICATION_JSON));
 
         assertEquals(2, repository.count());
         User actualUser = repository.findByEmail(expectedUser.getEmail()).get();
@@ -130,7 +139,7 @@ public final class UserControllerTest {
     void testDeleteUser() throws Exception {
         assertEquals(2, repository.count());
 
-        mockMvc.perform(delete("/api/users/2"))
+        testUtils.authorizedRequest(delete("/api/users/2"), "petrov@mail.ru")
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -142,10 +151,11 @@ public final class UserControllerTest {
         mockMvc
                 .perform(get("/api/users/3"))
                 .andDo(print())
-                .andExpect(result -> assertNotNull(result.getResolvedException()))
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(result -> assertThat(result.getResolvedException().getMessage())
-                        .contains("User not found"));
+//                .andExpect(result -> assertNotNull(result.getResolvedException()))
+                .andExpect(status().isUnauthorized());
+//                .andExpect(status().isUnprocessableEntity())
+//                .andExpect(result -> assertThat(result.getResolvedException().getMessage())
+//                        .contains("User not found"));
     }
 
     @Test
@@ -156,19 +166,37 @@ public final class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(result -> assertNotNull(result.getResolvedException()))
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(result -> assertThat(result.getResolvedException().getMessage())
-                        .contains("Can't update. User not found"));
+//                .andExpect(result -> assertNotNull(result.getResolvedException()))
+                .andExpect(status().isUnauthorized());
+//                .andExpect(result -> assertThat(result.getResolvedException().getMessage())
+//                        .contains("Can't update. User not found"));
     }
 
     @Test
     void testDeleteUserFail() throws Exception {
         mockMvc.perform(delete("/api/users/3"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
 
         assertEquals(2, repository.count());
+    }
+
+    @Test
+    void testLogin() throws Exception {
+        //final String token = jwtHelper.expiring(Map.of(SPRING_SECURITY_FORM_USERNAME_KEY, "petrov@mail.ru"));
+        //System.out.println(token);
+//        MockHttpServletResponse response = mockMvc
+//        .perform(get("/api/users/2")
+//        .header(AUTHORIZATION, testUtils.getToken("petrov@mail.ru")))
+        MockHttpServletResponse response =
+                testUtils.authorizedRequest(get("/api/users/2"), "petrov@mail.ru")
+                        .andDo(print())
+                        .andExpectAll(status().isOk(),
+                                content().contentType(MediaType.APPLICATION_JSON))
+                        .andReturn()
+                        .getResponse();
+        assertThat(response.getContentAsString()).contains("Petrov");
+        assertThat(response.getContentAsString()).doesNotContain("Ivanov");
     }
 
 }
