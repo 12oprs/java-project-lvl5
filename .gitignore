@@ -5,3 +5,6 @@
 /database.trace.db
 /database.mv.db
 /taskManager.mv.db
+/node/
+/frontend/build/
+/frontend/node_modules/
