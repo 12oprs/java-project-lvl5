@@ -49,4 +49,4 @@ rules:
   functional/no-throw-statement: 0
   no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]
   testing-library/no-debug: 0
-  linebreak-style: ["error", "windows"]
+  linebreak-style: ["error", "unix"]
