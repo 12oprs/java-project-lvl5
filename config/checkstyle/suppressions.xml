@@ -10,6 +10,8 @@
     <suppress checks="DesignForExtension"
               files="AppApplication.java|SecurityConfig.java|
                     |WebConfig.java|TestConfig.java|
-                    |UserController.java"/>
+                    |UserController.java|
+                    |TaskStatusController.java|
+                    |TaskController.java"/>
 
 </suppressions>
