@@ -3,8 +3,6 @@ package hexlet.code.app.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.model.TaskStatus;
-import hexlet.code.app.repository.TaskStatusRepository;
-import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.TaskStatusService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +29,6 @@ public class TaskStatusController {
 
     @Autowired
     private TaskStatusService service;
-
-    @Autowired
-    private TaskStatusRepository statusRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private ObjectMapper mapper;

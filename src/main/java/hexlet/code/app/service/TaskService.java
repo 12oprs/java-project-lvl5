@@ -32,7 +32,7 @@ public final class TaskService {
         Task updatedTask = repository.findById(id).orElseThrow(() -> new Exception("Can't update. Task not found"));
         updatedTask.setName(dto.getName());
         updatedTask.setDescription(dto.getDescription());
-        updatedTask.setStatus(dto.getStatus());
+        updatedTask.setTaskStatus(dto.getStatus());
         updatedTask.setAuthor(dto.getAuthor());
         updatedTask.setExecutor(dto.getExecutor());
         return repository.save(updatedTask);
