@@ -56,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 new AntPathRequestMatcher(baseUrl + "/users", GET.toString()),
                 new AntPathRequestMatcher(baseUrl + "/statuses/**", GET.toString()),
                 new AntPathRequestMatcher(baseUrl + "/tasks/**", GET.toString()),
+                new AntPathRequestMatcher(baseUrl + "/labels/**", GET.toString()),
                 new NegatedRequestMatcher(new AntPathRequestMatcher(baseUrl + "/**"))
         );
         this.userDetailsService = userDetailsService;
