@@ -8,16 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -40,7 +34,7 @@ public class Task {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "status_id")
-    private TaskStatus status;
+    private TaskStatus taskStatus;
 
     @NotNull
     @ManyToOne
@@ -55,12 +49,19 @@ public class Task {
     @CreationTimestamp
     private Date createdAt;
 
+    @ManyToMany
+    private List<Label> labels;
+
     public Task(TaskDTO dto) {
         this.name = dto.getName();
         this.description = dto.getDescription();
-        this.status = dto.getStatus();
+        this.taskStatus = dto.getStatus();
         this.author = dto.getAuthor();
         this.executor = dto.getExecutor();
+        if (dto.getLabels() != null) {
+            this.labels.addAll(dto.getLabels());
+        }
+
     }
 
 }
