@@ -1,6 +1,5 @@
 package hexlet.code.app.service;
 
-import hexlet.code.app.Mapper;
 import hexlet.code.app.dto.UserCreationDTO;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
@@ -21,8 +20,7 @@ import static hexlet.code.app.config.SecurityConfig.DEFAULT_AUTHORITIES;
 public final class UserService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
-    @Autowired
-    private Mapper mapper;
+
     @Autowired
     private PasswordEncoder encoder;
 
@@ -36,7 +34,7 @@ public final class UserService implements UserDetailsService {
 
     public User createUser(UserCreationDTO dto) {
         dto.setPassword(encoder.encode(dto.getPassword()));
-        User user = mapper.toUser(dto);
+        User user = new User(dto);
         return repository.save(user);
     }
     public User updateUser(long id, UserCreationDTO dto) throws Exception {
