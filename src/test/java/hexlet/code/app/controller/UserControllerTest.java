@@ -29,13 +29,8 @@ import java.nio.file.Paths;
 import static hexlet.code.app.config.TestConfig.TEST_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-//import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = TestConfig.class)
 @Transactional
 @DBRider
-@DataSet("users.yml")
+@DataSet("dataset.yml")
 public final class UserControllerTest {
 
     @Autowired
@@ -120,7 +115,7 @@ public final class UserControllerTest {
 
     @Test
     void testUpdateUser() throws Exception {
-        MockHttpServletRequestBuilder updateRequest = patch("/api/users/2")
+        MockHttpServletRequestBuilder updateRequest = put("/api/users/2")
                 .content(mapper.writeValueAsString(testUserDTO))
                 .contentType(MediaType.APPLICATION_JSON);
 
