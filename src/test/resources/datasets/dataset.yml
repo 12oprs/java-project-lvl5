@@ -23,3 +23,8 @@ tasks:
   - id: 2
     name: testTask2
     description: "test description 2"
+labels:
+  - id: 1
+    name: "bug"
+  - id: 2
+    name: "feature"
