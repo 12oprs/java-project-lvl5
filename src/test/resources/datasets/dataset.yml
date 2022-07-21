@@ -1,0 +1,25 @@
+users:
+  - id: 1
+    first_name: Ivan
+    last_name: Ivanov
+    email: ivanov@mail.ru
+    password: 12345
+  - id: 2
+    first_name: Petr
+    last_name: Petrov
+    email: petrov@mail.ru
+    password: 54321
+statuses:
+  - id: 1
+    name: "in work"
+  - id: 2
+    name: "finished"
+tasks:
+  - id: 1
+    name: testTask1
+    description: "test description 1"
+    status_id: 1
+    author_id: 1
+  - id: 2
+    name: testTask2
+    description: "test description 2"
