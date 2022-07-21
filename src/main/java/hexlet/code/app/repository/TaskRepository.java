@@ -1,7 +1,6 @@
 package hexlet.code.app.repository;
 
 import hexlet.code.app.model.Task;
-import hexlet.code.app.model.TaskStatus;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

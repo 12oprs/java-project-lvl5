@@ -30,7 +30,11 @@ import static hexlet.code.app.config.TestConfig.TEST_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -146,11 +150,7 @@ public final class UserControllerTest {
         mockMvc
                 .perform(get("/api/users/3"))
                 .andDo(print())
-//                .andExpect(result -> assertNotNull(result.getResolvedException()))
                 .andExpect(status().isUnauthorized());
-//                .andExpect(status().isUnprocessableEntity())
-//                .andExpect(result -> assertThat(result.getResolvedException().getMessage())
-//                        .contains("User not found"));
     }
 
     @Test
@@ -161,10 +161,7 @@ public final class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-//                .andExpect(result -> assertNotNull(result.getResolvedException()))
                 .andExpect(status().isUnauthorized());
-//                .andExpect(result -> assertThat(result.getResolvedException().getMessage())
-//                        .contains("Can't update. User not found"));
     }
 
     @Test
@@ -178,11 +175,6 @@ public final class UserControllerTest {
 
     @Test
     void testLogin() throws Exception {
-        //final String token = jwtHelper.expiring(Map.of(SPRING_SECURITY_FORM_USERNAME_KEY, "petrov@mail.ru"));
-        //System.out.println(token);
-//        MockHttpServletResponse response = mockMvc
-//        .perform(get("/api/users/2")
-//        .header(AUTHORIZATION, testUtils.getToken("petrov@mail.ru")))
         MockHttpServletResponse response =
                 testUtils.authorizedRequest(get("/api/users/2"), "petrov@mail.ru")
                         .andDo(print())

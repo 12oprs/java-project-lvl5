@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.app.config.TestConfig;
-import hexlet.code.app.dto.UserCreationDTO;
 import hexlet.code.app.TestUtils;
 import hexlet.code.app.model.TaskStatus;
-import hexlet.code.app.model.User;
 import hexlet.code.app.repository.TaskStatusRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -22,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -51,7 +48,7 @@ public class TaskStatusControllerTest {
 
     @Autowired
     TaskStatusRepository repository;
-    
+
     @Autowired
     TestUtils testUtils;
 
@@ -100,7 +97,7 @@ public class TaskStatusControllerTest {
                 .content(mapper.writeValueAsString(testTaskStatus))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        testUtils.authorizedRequest(createRequest, "petrov@mail.ru")       
+        testUtils.authorizedRequest(createRequest, "petrov@mail.ru")
                 .andDo(print())
                 .andExpectAll(status().isCreated(),
                         content().contentType(MediaType.APPLICATION_JSON))

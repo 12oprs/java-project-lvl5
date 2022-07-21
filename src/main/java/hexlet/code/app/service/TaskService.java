@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class TaskService {
+public final class TaskService {
 
     @Autowired
     private TaskRepository repository;

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class TaskStatusService {
+public final class TaskStatusService {
 
     @Autowired
     private TaskStatusRepository repository;
@@ -28,7 +28,8 @@ public class TaskStatusService {
         return repository.save(newStatus);
     }
     public TaskStatus updateTaskStatus(long id, String newName) throws Exception {
-        TaskStatus updatedStatus = repository.findById(id).orElseThrow(() -> new Exception("Can't update. Status not found"));
+        TaskStatus updatedStatus = repository.findById(id)
+                .orElseThrow(() -> new Exception("Can't update. Status not found"));
         updatedStatus.setName(newName);
         return repository.save(updatedStatus);
     }
