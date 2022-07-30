@@ -11,9 +11,6 @@ spring:
         web-allow-others: true
   jpa:
     show-sql: true
-springdoc:
-  swagger-ui:
-    path: /swagger.html
 logging:
   level:
     web: "DEBUG"
