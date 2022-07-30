@@ -3,8 +3,14 @@ package hexlet.code.app.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.model.Label;
+import hexlet.code.app.model.User;
 import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.service.LabelService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,11 +47,22 @@ public class LabelController {
                 authentication.isAuthenticated()
             """;
 
+    @Operation(summary = "Get labels")
+    @ApiResponses(@ApiResponse(
+            responseCode = "200",
+            description = "Labels found",
+            content = @Content(schema = @Schema(implementation = Label.class)))
+    )
     @GetMapping
     public List<Label> getLabels() {
         return service.getLabels();
     }
 
+    @Operation(summary = "Get label by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Label found"),
+            @ApiResponse(responseCode = "404", description = "Label not found")
+    })
     @GetMapping("/{id}")
     public Label getLabel(@PathVariable long id) {
         Label label = null;
@@ -58,6 +75,8 @@ public class LabelController {
         return label;
     }
 
+    @Operation(summary = "Create label")
+    @ApiResponse(responseCode = "201", description = "Label created")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(ONLY_AUTHORIZED)
@@ -71,6 +90,11 @@ public class LabelController {
         return service.createLabel(name);
     }
 
+    @Operation(summary = "Update label")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Label updated"),
+            @ApiResponse(responseCode = "404", description = "Can't update. Label not found")
+    })
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
     public Label updateLabel(@PathVariable long id, @RequestBody String json) throws Exception {
@@ -84,6 +108,11 @@ public class LabelController {
         return service.updateLabel(id, name);
     }
 
+    @Operation(summary = "Delete label")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Label deleted"),
+            @ApiResponse(responseCode = "404", description = "Can't delete. Label not exist")
+    })
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
     public String deleteLabel(@PathVariable long id) {

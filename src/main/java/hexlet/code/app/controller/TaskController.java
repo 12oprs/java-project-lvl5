@@ -2,9 +2,15 @@ package hexlet.code.app.controller;
 
 import hexlet.code.app.dto.TaskDTO;
 import hexlet.code.app.model.Task;
+import hexlet.code.app.model.User;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
@@ -46,13 +52,23 @@ public class TaskController {
     private static final String ONLY_OWNER_BY_ID = """
             @userRepository.findById(#id).get().getEmail() == authentication.getName()
         """;
-
+    @Operation(summary = "Get tasks")
+    @ApiResponses(@ApiResponse(
+            responseCode = "200",
+            description = "Tasks found",
+            content = @Content(schema = @Schema(implementation = Task.class)))
+    )
     @GetMapping
     public Iterable<Task> getTasks(
             @QuerydslPredicate(root = Task.class, bindings = TaskRepository.class) Predicate predicate) {
         return service.getTasks(predicate);
     }
 
+    @Operation(summary = "Get task by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task found"),
+            @ApiResponse(responseCode = "404", description = "Task not found")
+    })
     @GetMapping("/{id}")
     public Task getTask(@PathVariable long id) {
         Task task = null;
@@ -65,6 +81,8 @@ public class TaskController {
         return task;
     }
 
+    @Operation(summary = "Create task")
+    @ApiResponse(responseCode = "201", description = "Task created")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(ONLY_AUTHORIZED)
@@ -72,6 +90,11 @@ public class TaskController {
         return service.createTask(dto);
     }
 
+    @Operation(summary = "Update task")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task updated"),
+            @ApiResponse(responseCode = "404", description = "Can't update. Task not found")
+    })
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
     public Task updateTask(@PathVariable long id, @RequestBody TaskDTO dto) throws Exception {
@@ -85,6 +108,11 @@ public class TaskController {
         return task;
     }
 
+    @Operation(summary = "Delete task")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task deleted"),
+            @ApiResponse(responseCode = "404", description = "Can't delete. Task not exist")
+    })
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
     public String deleteTask(@PathVariable long id) {

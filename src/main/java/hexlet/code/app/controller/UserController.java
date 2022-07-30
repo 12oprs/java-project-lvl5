@@ -4,6 +4,11 @@ import hexlet.code.app.dto.UserCreationDTO;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,11 +41,22 @@ public class UserController {
             @userRepository.findById(#id).get().getEmail() == authentication.getName()
         """;
 
+    @Operation(summary = "Get users")
+    @ApiResponses(@ApiResponse(
+            responseCode = "200",
+            description = "Users found",
+            content = @Content(schema = @Schema(implementation = User.class)))
+    )
     @GetMapping
     public List<User> getUsers() {
         return service.getUsers();
     }
 
+    @Operation(summary = "Get user by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+                    })
     @GetMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
     public User getUser(@PathVariable long id) {
@@ -53,13 +69,19 @@ public class UserController {
         }
         return user;
     }
-
+    @Operation(summary = "Create user")
+    @ApiResponse(responseCode = "201", description = "User created")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User registration(@RequestBody UserCreationDTO dto) {
         return service.createUser(dto);
     }
 
+    @Operation(summary = "Update user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User updated", content = {"application/json"}),
+            @ApiResponse(responseCode = "404", description = "Can't update. User not found")
+    })
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
     public User updateUser(@PathVariable long id, @RequestBody UserCreationDTO dto) {
@@ -72,7 +94,11 @@ public class UserController {
         }
         return user;
     }
-
+    @Operation(summary = "Delete user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User deleted"),
+            @ApiResponse(responseCode = "404", description = "Can't delete. User not exist")
+    })
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
     public String deleteUser(@PathVariable long id) {
