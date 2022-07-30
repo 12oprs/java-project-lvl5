@@ -12,6 +12,7 @@
                     |WebConfig.java|TestConfig.java|
                     |UserController.java|
                     |TaskStatusController.java|
-                    |TaskController.java"/>
+                    |TaskController.java|
+                    |LabelController.java"/>
 
 </suppressions>

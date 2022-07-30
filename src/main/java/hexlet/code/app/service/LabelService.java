@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class LabelService {
+public final class LabelService {
 
     @Autowired
     private LabelRepository repository;
