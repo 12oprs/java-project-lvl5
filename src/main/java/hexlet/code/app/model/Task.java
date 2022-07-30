@@ -10,8 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "tasks")
@@ -49,8 +48,18 @@ public class Task {
     @CreationTimestamp
     private Date createdAt;
 
-    @ManyToMany
-    private List<Label> labels;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ElementCollection
+    @CollectionTable(name = "task_labels", joinColumns = @JoinColumn(name = "label_id"))
+    @Column(name = "labels")
+//    @JoinTable(name = "tasks_labels",
+//            joinColumns = {
+//                    @JoinColumn(name = "tasks_id", referencedColumnName = "id",
+//                            nullable = false, updatable = false)},
+//            inverseJoinColumns = {
+//                    @JoinColumn(name = "labels_id", referencedColumnName = "id",
+//                            nullable = false, updatable = false)})
+    private Set<Label> labels = new HashSet<>();
 
     public Task(TaskDTO dto) {
         this.name = dto.getName();
@@ -61,7 +70,10 @@ public class Task {
         if (dto.getLabels() != null) {
             this.labels.addAll(dto.getLabels());
         }
+    }
 
+    public void addLabel(Label label) {
+        labels.add(label);
     }
 
 }

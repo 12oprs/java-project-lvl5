@@ -6,7 +6,9 @@ import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.app.TestUtils;
 import hexlet.code.app.config.TestConfig;
 import hexlet.code.app.dto.TaskDTO;
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
 
 import static hexlet.code.app.config.TestConfig.TEST_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +54,9 @@ public class TaskControllerTest {
 
     @Autowired
     TaskRepository taskRepository;
+
+    @Autowired
+    LabelRepository labelRepository;
 
     @Autowired
     TestUtils testUtils;
@@ -145,6 +152,36 @@ public class TaskControllerTest {
                 .andExpect(status().isForbidden());
 
         assertEquals(2, taskRepository.count());
+    }
+
+    //@Disabled
+    @Test
+    void testTaskFiltration() throws Exception {
+        Task testTask = taskRepository.findById(1L).get();
+        taskRepository.findById(1L).get()
+                .addLabel(labelRepository.findById(1L).get());
+        taskRepository.save(testTask);
+
+        MockHttpServletResponse response = mockMvc
+                .perform(get("/api/tasks?taskStatus=1&executorId=1&labels=1"))
+                .andDo(print())
+                .andExpectAll(status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+        assertThat(response.getContentAsString()).contains("testTask1");
+        assertThat(response.getContentAsString()).doesNotContain("testTask2");
+
+        MockHttpServletResponse response2 = mockMvc
+                .perform(get("/api/tasks?taskStatus=2"))
+                .andDo(print())
+                .andExpectAll(status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+        assertThat(response2.getContentAsString())
+                .doesNotContain("testTask1")
+                .doesNotContain("testTask2");
     }
 
 }
