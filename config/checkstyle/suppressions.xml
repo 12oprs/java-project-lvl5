@@ -13,6 +13,7 @@
                     |UserController.java|
                     |TaskStatusController.java|
                     |TaskController.java|
-                    |LabelController.java"/>
+                    |LabelController.java|
+                    |Task.java"/>
 
 </suppressions>

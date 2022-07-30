@@ -3,7 +3,6 @@ package hexlet.code.app.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.model.Label;
-import hexlet.code.app.model.User;
 import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.service.LabelService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -79,7 +79,7 @@ public class UserController {
 
     @Operation(summary = "Update user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User updated", content = {"application/json"}),
+            @ApiResponse(responseCode = "200", description = "User updated"),
             @ApiResponse(responseCode = "404", description = "Can't update. User not found")
     })
     @PutMapping("/{id}")

@@ -6,7 +6,6 @@ import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.app.TestUtils;
 import hexlet.code.app.config.TestConfig;
 import hexlet.code.app.dto.TaskDTO;
-import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
@@ -24,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
 
 import static hexlet.code.app.config.TestConfig.TEST_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;

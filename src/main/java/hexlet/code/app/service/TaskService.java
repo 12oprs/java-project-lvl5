@@ -1,21 +1,16 @@
 package hexlet.code.app.service;
 
-import com.querydsl.core.types.Visitor;
-import com.querydsl.core.types.dsl.CaseBuilder;
 import hexlet.code.app.dto.TaskDTO;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.UserRepository;
-import liquibase.repackaged.org.apache.commons.collections4.PredicateUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.querydsl.core.types.Predicate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.criteria.CriteriaBuilder;
 
 
 @Service

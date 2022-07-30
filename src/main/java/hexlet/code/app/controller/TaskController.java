@@ -2,7 +2,6 @@ package hexlet.code.app.controller;
 
 import hexlet.code.app.dto.TaskDTO;
 import hexlet.code.app.model.Task;
-import hexlet.code.app.model.User;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.TaskService;
