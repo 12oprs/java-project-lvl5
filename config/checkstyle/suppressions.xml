@@ -16,4 +16,7 @@
                     |LabelController.java|
                     |Task.java"/>
 
+     <suppress checks="JavadocMethod"
+              files="RollbarConfig.java"/>
+
 </suppressions>
