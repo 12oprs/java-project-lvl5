@@ -5,4 +5,5 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/12oprs/java-project-lvl5/workflows/hexlet-check/badge.svg)](https://github.com/12oprs/java-project-lvl5/actions)  
 
-[Link to application](https://project5-4321.herokuapp.com/)
+[Link to application](https://project5-4321.herokuapp.com/)  
+Documentation is located on `/swagger.html` when app is running  
