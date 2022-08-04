@@ -5,6 +5,7 @@ import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,6 +53,14 @@ public final class UserService implements UserDetailsService {
             return "User deleted";
         }
         throw new Exception("Can't delete. User not exist");
+    }
+
+    public String getCurrentUserName() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public User getCurrentUser() {
+        return repository.findByEmail(getCurrentUserName()).get();
     }
 
     @Override

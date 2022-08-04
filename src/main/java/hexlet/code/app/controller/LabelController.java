@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @AllArgsConstructor
 @RestController
@@ -36,8 +37,8 @@ public class LabelController {
     @Autowired
     private LabelService service;
 
-    @Autowired
-    private LabelRepository repository;
+//    @Autowired
+//    private LabelRepository repository;
 
     @Autowired
     private ObjectMapper mapper;
@@ -53,7 +54,7 @@ public class LabelController {
             content = @Content(schema = @Schema(implementation = Label.class)))
     )
     @GetMapping
-    public List<Label> getLabels() {
+    public Iterable<Label> getLabels() {
         return service.getLabels();
     }
 

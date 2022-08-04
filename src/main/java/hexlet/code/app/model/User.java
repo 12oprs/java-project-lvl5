@@ -56,4 +56,8 @@ public class User {
         this.email = dto.getEmail();
         this.password = dto.getPassword();
     }
+
+    public User(final Long newId) {
+        this.id = newId;
+    }
 }

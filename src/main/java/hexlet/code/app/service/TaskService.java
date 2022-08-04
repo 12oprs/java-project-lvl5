@@ -1,13 +1,13 @@
 package hexlet.code.app.service;
 
+import com.querydsl.core.types.Predicate;
 import hexlet.code.app.dto.TaskDTO;
 import hexlet.code.app.model.Task;
+import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.TaskRepository;
-import hexlet.code.app.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.querydsl.core.types.Predicate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,23 @@ public final class TaskService {
     private TaskRepository taskRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
+    @Autowired
+    private LabelService labelService;
+
+    @Autowired
+    private TaskStatusService statusService;
+
+    public Iterable<Task> getTasks() {
+        return taskRepository.findAll();
+    }
 
     public Iterable<Task> getTasks(Predicate predicate) {
         if (predicate == null) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User user = (User) auth.getPrincipal();
-            return taskRepository.findByAuthorId(user.getId());
+            return taskRepository.findAllByAuthorId(user.getId());
         }
         return taskRepository.findAll(predicate);
     }
@@ -37,7 +47,15 @@ public final class TaskService {
     }
 
     public Task createTask(TaskDTO dto) {
-        Task newTask = new Task(dto);
+        final User author = userService.getCurrentUser();
+        Task newTask = Task.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .taskStatus(new TaskStatus(dto.getTaskStatusId()))
+                .author(author)
+                .executor(new User(dto.getExecutorId()))
+                .labels(labelService.getLabels(dto.getLabelIds()))
+                .build();
         return taskRepository.save(newTask);
     }
 
@@ -45,9 +63,10 @@ public final class TaskService {
         Task updatedTask = taskRepository.findById(id).orElseThrow(() -> new Exception("Can't update. Task not found"));
         updatedTask.setName(dto.getName());
         updatedTask.setDescription(dto.getDescription());
-        updatedTask.setTaskStatus(dto.getStatus());
-        updatedTask.setAuthor(dto.getAuthor());
-        updatedTask.setExecutor(dto.getExecutor());
+        updatedTask.setTaskStatus(statusService.getTaskStatus(dto.getTaskStatusId()));
+        updatedTask.setAuthor(userService.getUser(dto.getAuthorId()));
+        updatedTask.setExecutor(userService.getUser(dto.getExecutorId()));
+        updatedTask.setLabels(labelService.getLabels(dto.getLabelIds()));
         return taskRepository.save(updatedTask);
     }
 

@@ -7,6 +7,8 @@ import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,11 +18,11 @@ public interface TaskRepository extends CrudRepository<Task, Long>,
         QuerydslBinderCustomizer<QTask> {
 
     Optional<Task> findByName(String name);
-    Iterable<Task> findByAuthorId(Long id);
+    List<Task> findAllByAuthorId(Long id);
 
     @Override
     default void customize(QuerydslBindings bindings, QTask task) {
-        bindings.bind(task.taskStatus).first(
+        bindings.bind(task.taskStatus.id).first(
                 (path, value) -> path.eq(value)
         );
         bindings.bind(task.author.id).first(

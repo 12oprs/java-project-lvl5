@@ -1,8 +1,8 @@
 package hexlet.code.app.model;
 
 import com.sun.istack.NotNull;
-import hexlet.code.app.dto.TaskDTO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +30,7 @@ import java.util.Set;
 @Table(name = "tasks")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
@@ -46,7 +47,7 @@ public class Task {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "status_id")
+    @JoinColumn(name = "taskStatus_id")
     private TaskStatus taskStatus;
 
     @NotNull
@@ -66,28 +67,14 @@ public class Task {
     @ElementCollection
     @CollectionTable(name = "task_labels", joinColumns = @JoinColumn(name = "label_id"))
     @Column(name = "labels")
-//    @JoinTable(name = "tasks_labels",
-//            joinColumns = {
-//                    @JoinColumn(name = "tasks_id", referencedColumnName = "id",
-//                            nullable = false, updatable = false)},
-//            inverseJoinColumns = {
-//                    @JoinColumn(name = "labels_id", referencedColumnName = "id",
-//                            nullable = false, updatable = false)})
     private Set<Label> labels = new HashSet<>();
 
-    public Task(TaskDTO dto) {
-        this.name = dto.getName();
-        this.description = dto.getDescription();
-        this.taskStatus = dto.getStatus();
-        this.author = dto.getAuthor();
-        this.executor = dto.getExecutor();
-        if (dto.getLabels() != null) {
-            this.labels.addAll(dto.getLabels());
-        }
+    public Task(final Long newId) {
+        this.id = newId;
     }
 
     public void addLabel(Label label) {
-        labels.add(label);
+        this.labels.add(label);
     }
 
 }

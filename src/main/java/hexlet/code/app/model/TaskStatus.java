@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "statuses")
+@Table(name = "taskStatuses")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,5 +36,9 @@ public class TaskStatus {
 
     public TaskStatus(String newName) {
         this.name = newName;
+    }
+
+    public TaskStatus(final Long newId) {
+        this.id = newId;
     }
 }

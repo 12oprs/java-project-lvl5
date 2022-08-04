@@ -1,16 +1,8 @@
 {
 	"name" : "testTask3",
 	"description" : "test description 3",
-	"status": {
-	    "id":1,
-	    "name":"in work"
-	    },
-	"author": {
-	    "id":1,
-	    "firstName":"Ivan",
-	    "lastName":"Ivanov",
-	    "email":"ivanov@mail.ru"
-	    }
+	"taskStatusId": 1,
+	"authorId": 1
 }
 
 

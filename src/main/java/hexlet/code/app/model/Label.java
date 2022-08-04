@@ -33,11 +33,11 @@ public class Label {
     @CreationTimestamp
     private Date createdAt;
 
-//    @ManyToMany(mappedBy = "labels")
-//    private Set<Task> tasks = new HashSet<>();
-
-
     public Label(String newName) {
         this.name = newName;
+    }
+
+    public Label(final Long newId) {
+        this.id = newId;
     }
 }

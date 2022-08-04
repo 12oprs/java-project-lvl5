@@ -7,8 +7,11 @@ import hexlet.code.app.TestUtils;
 import hexlet.code.app.config.TestConfig;
 import hexlet.code.app.dto.TaskDTO;
 import hexlet.code.app.model.Task;
+import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
+import hexlet.code.app.service.TaskService;
+import hexlet.code.app.service.TaskStatusService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,10 +59,12 @@ public class TaskControllerTest {
     LabelRepository labelRepository;
 
     @Autowired
+    TaskService taskService;
+
+    @Autowired
     TestUtils testUtils;
 
     private static TaskDTO testTaskDTO;
-    private static Task expectedTask;
     private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
     @BeforeAll
@@ -67,7 +72,6 @@ public class TaskControllerTest {
         testTaskDTO = mapper.readValue(
                 new File(WORK_DIR + "/src/test/resources/datasets/testTaskDTO"),
                 TaskDTO.class);
-        expectedTask = new Task(testTaskDTO);
     }
 
     @Test
@@ -110,6 +114,7 @@ public class TaskControllerTest {
 
         assertEquals(3, taskRepository.count());
         Task actualTask = taskRepository.findByName(testTaskDTO.getName()).get();
+        Task expectedTask = taskService.createTask(testTaskDTO);
         assertEquals(expectedTask.getDescription(), actualTask.getDescription());
     }
 
@@ -126,6 +131,7 @@ public class TaskControllerTest {
 
         assertEquals(2, taskRepository.count());
         Task actualTask = taskRepository.findById(2L).get();
+        Task expectedTask = taskService.createTask(testTaskDTO);
         assertEquals(expectedTask.getDescription(), actualTask.getDescription());
     }
 
@@ -155,8 +161,7 @@ public class TaskControllerTest {
     @Test
     void testTaskFiltration() throws Exception {
         Task testTask = taskRepository.findById(1L).get();
-        taskRepository.findById(1L).get()
-                .addLabel(labelRepository.findById(1L).get());
+        testTask.addLabel(labelRepository.findById(1L).get());
         taskRepository.save(testTask);
 
         MockHttpServletResponse response = mockMvc
