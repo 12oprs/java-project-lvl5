@@ -23,7 +23,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -67,7 +66,7 @@ public class Task {
     @ElementCollection
     @CollectionTable(name = "task_labels", joinColumns = @JoinColumn(name = "label_id"))
     @Column(name = "labels")
-    private Set<Label> labels = new HashSet<>();
+    private Set<Label> labels;
 
     public Task(final Long newId) {
         this.id = newId;

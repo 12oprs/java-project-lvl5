@@ -3,7 +3,6 @@ package hexlet.code.app.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.model.Label;
-import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.service.LabelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,10 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @AllArgsConstructor
 @RestController
@@ -36,9 +32,6 @@ public class LabelController {
 
     @Autowired
     private LabelService service;
-
-//    @Autowired
-//    private LabelRepository repository;
 
     @Autowired
     private ObjectMapper mapper;
