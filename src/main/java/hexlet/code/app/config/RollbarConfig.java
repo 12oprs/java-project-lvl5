@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+
 @Configuration()
 @ComponentScan({
         // ADD YOUR PROJECT PACKAGE HERE
@@ -18,23 +19,26 @@ public class RollbarConfig {
     @Value("${rollbar_token:}")
     private String rollbarToken;
 
-    @Value("${spring.profiles.active:}")
+    @Value("${spring.profiles.active}")
     private String activeProfile;
 
     /**
      * Register a Rollbar bean to configure App with Rollbar.
      */
     @Bean
-    public Rollbar rollbar() {
-        return new Rollbar(getRollbarConfigs(rollbarToken));
+    public Rollbar rollbar() throws Exception {
+        Rollbar rollbar = Rollbar.init(getRollbarConfigs(rollbarToken));
+        rollbar.log("App started");
+        rollbar.close(true);
+        return rollbar;
     }
 
     private Config getRollbarConfigs(String accessToken) {
 
         // Reference ConfigBuilder.java for all the properties you can set for Rollbar
         return RollbarSpringConfigBuilder.withAccessToken(accessToken)
-                .environment("production")
-                .enabled(activeProfile == "production")
+                .environment(activeProfile)
+                .enabled(activeProfile.equals("production"))
                 .build();
     }
 }

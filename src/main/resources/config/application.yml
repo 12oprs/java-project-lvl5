@@ -12,6 +12,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+  profiles:
+    active: production
 springdoc:
   swagger-ui:
     path: /swagger.html
