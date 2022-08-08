@@ -95,13 +95,9 @@ jacocoTestReport {
     }
 }
 
-diffChangeLog {
-	dependsOn compileJava
-}
-
 liquibase {
 	activities {
-		all {
+		main {
 			changeLogFile 'src/main/resources/db/changelog/changelog-master.yml'
 			url 'jdbc:h2:./taskManager'
 			username 'sa'
@@ -111,6 +107,10 @@ liquibase {
 					'&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy'
 		}
 	}
+}
+
+diffChangeLog {
+	dependsOn compileJava
 }
 
 test {
