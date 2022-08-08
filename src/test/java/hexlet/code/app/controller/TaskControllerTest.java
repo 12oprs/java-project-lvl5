@@ -112,8 +112,7 @@ public class TaskControllerTest {
 
         assertEquals(3, taskRepository.count());
         Task actualTask = taskRepository.findByName(testTaskDTO.getName()).get();
-        Task expectedTask = taskService.createTask(testTaskDTO);
-        assertEquals(expectedTask.getDescription(), actualTask.getDescription());
+        assertEquals(testTaskDTO.getDescription(), actualTask.getDescription());
     }
 
     @Test
@@ -129,8 +128,7 @@ public class TaskControllerTest {
 
         assertEquals(2, taskRepository.count());
         Task actualTask = taskRepository.findById(2L).get();
-        Task expectedTask = taskService.createTask(testTaskDTO);
-        assertEquals(expectedTask.getDescription(), actualTask.getDescription());
+        assertEquals(testTaskDTO.getDescription(), actualTask.getDescription());
     }
 
     @Test

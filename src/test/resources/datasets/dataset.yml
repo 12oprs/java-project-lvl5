@@ -9,7 +9,7 @@ users:
     last_name: Petrov
     email: petrov@mail.ru
     password: 54321
-statuses:
+task_statuses:
   - id: 1
     name: "in work"
   - id: 2
@@ -18,21 +18,16 @@ tasks:
   - id: 1
     name: testTask1
     description: "test description 1"
-    status_id: 1
+    task_status_id: 1
     author_id: 1
     executor_id: 1
-#    labels_id: [1]
   - id: 2
     name: testTask2
     description: "test description 2"
-    status_id: 1
+    task_status_id: 1
     author_id: 1
 labels:
   - id: 1
     name: "bug"
-#   tasks_id: [1]
   - id: 2
     name: "feature"
-#tasks_labels:
-#  - tasks_id: 1
-#  - labels_id: 1

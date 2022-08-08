@@ -46,16 +46,21 @@ public final class TaskService {
         return taskRepository.findById(id).orElseThrow(() -> new Exception("Task not found"));
     }
 
-    public Task createTask(TaskDTO dto) {
+    public Task createTask(TaskDTO dto) throws Exception {
         final User author = userService.getCurrentUser();
         Task newTask = Task.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .taskStatus(new TaskStatus(dto.getTaskStatusId()))
                 .author(author)
-                .executor(new User(dto.getExecutorId()))
-                .labels(labelService.getLabels(dto.getLabelIds()))
                 .build();
+        if (dto.getExecutorId() != null) {
+            newTask.setExecutor(userService.getUser(dto.getExecutorId()));
+        }
+        if (dto.getLabelIds() != null) {
+            newTask.setLabels(labelService.getLabels(dto.getLabelIds()));
+        }
+
         return taskRepository.save(newTask);
     }
 
@@ -65,8 +70,12 @@ public final class TaskService {
         updatedTask.setDescription(dto.getDescription());
         updatedTask.setTaskStatus(statusService.getTaskStatus(dto.getTaskStatusId()));
         updatedTask.setAuthor(userService.getUser(dto.getAuthorId()));
-        updatedTask.setExecutor(userService.getUser(dto.getExecutorId()));
-        updatedTask.setLabels(labelService.getLabels(dto.getLabelIds()));
+        if (dto.getExecutorId() != null) {
+            updatedTask.setExecutor(userService.getUser(dto.getExecutorId()));
+        }
+        if (dto.getLabelIds() != null) {
+            updatedTask.setLabels(labelService.getLabels(dto.getLabelIds()));
+        }
         return taskRepository.save(updatedTask);
     }
 

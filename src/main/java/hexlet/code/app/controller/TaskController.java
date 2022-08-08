@@ -49,8 +49,9 @@ public class TaskController {
             """;
 
     private static final String ONLY_OWNER_BY_ID = """
-            @userRepository.findById(#id).get().getEmail() == authentication.getName()
-        """;
+                @userRepository.findById(#id).get().getEmail() == authentication.getName()
+            """;
+
     @Operation(summary = "Get tasks")
     @ApiResponses(@ApiResponse(
             responseCode = "200",
@@ -86,7 +87,14 @@ public class TaskController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(ONLY_AUTHORIZED)
     public Task createTask(@RequestBody TaskDTO dto) {
-        return service.createTask(dto);
+        Task task = null;
+        try {
+            task = service.createTask(dto);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
+        return task;
     }
 
     @Operation(summary = "Update task")
