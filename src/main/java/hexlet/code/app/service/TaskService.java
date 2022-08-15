@@ -46,30 +46,40 @@ public final class TaskService {
         return taskRepository.findById(id).orElseThrow(() -> new Exception("Task not found"));
     }
 
-    public Task createTask(TaskDTO dto) throws Exception {
+    public Task createTask(final TaskDTO dto) {
         final User author = userService.getCurrentUser();
-        Task newTask = Task.builder()
+        final TaskStatus taskStatus = statusService.getTaskStatus(dto.getTaskStatusId());
+        final Task newTask = Task.builder()
                 .name(dto.getName())
-                .description(dto.getDescription())
-                .taskStatus(new TaskStatus(dto.getTaskStatusId()))
+                .taskStatus(taskStatus)
                 .author(author)
                 .build();
+        if (dto.getDescription() != null) {
+            newTask.setDescription(dto.getDescription());
+        }
         if (dto.getExecutorId() != null) {
             newTask.setExecutor(userService.getUser(dto.getExecutorId()));
         }
         if (dto.getLabelIds() != null) {
             newTask.setLabels(labelService.getLabels(dto.getLabelIds()));
         }
-
         return taskRepository.save(newTask);
     }
 
-    public Task updateTask(long id, TaskDTO dto) throws Exception {
-        Task updatedTask = taskRepository.findById(id).orElseThrow(() -> new Exception("Can't update. Task not found"));
-        updatedTask.setName(dto.getName());
-        updatedTask.setDescription(dto.getDescription());
-        updatedTask.setTaskStatus(statusService.getTaskStatus(dto.getTaskStatusId()));
-        updatedTask.setAuthor(userService.getUser(dto.getAuthorId()));
+    public Task updateTask(final long id, final TaskDTO dto) {
+        final Task updatedTask = taskRepository.findById(id).get();
+        if (dto.getName() != null) {
+            updatedTask.setName(dto.getName());
+        }
+        if (dto.getDescription() != null) {
+            updatedTask.setDescription(dto.getDescription());
+        }
+        if (dto.getTaskStatusId() != null) {
+            updatedTask.setTaskStatus(statusService.getTaskStatus(dto.getTaskStatusId()));
+        }
+        if (dto.getAuthorId() != null) {
+            updatedTask.setAuthor(userService.getUser(dto.getAuthorId()));
+        }
         if (dto.getExecutorId() != null) {
             updatedTask.setExecutor(userService.getUser(dto.getExecutorId()));
         }

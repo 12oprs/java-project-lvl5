@@ -8,7 +8,7 @@ import org.springframework.test.context.TestPropertySource;
 
 @Configuration
 @Profile(TestConfig.TEST_PROFILE)
-@ComponentScan(basePackages = "hexlet.code.app")
+@ComponentScan(basePackages = "hexlet.code")
 @TestPropertySource(value = "classpath:/config/test.yml")
 public class TestConfig {
 
