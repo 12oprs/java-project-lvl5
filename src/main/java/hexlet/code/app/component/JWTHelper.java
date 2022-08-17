@@ -30,19 +30,16 @@ public final class JWTHelper {
     private final Long clockSkewSec;
     private final Clock clock;
 
-    //private static final Logger LOGGER = LoggerFactory.getLogger("jwtHelperLogger");
-
     public JWTHelper(@Value("${jwt.issuer:spring_blog}") final String issuer,
                      @Value("${jwt.expiration-sec:86400}") final Long expirationSec,
                      @Value("${jwt.clock-skew-sec:300}") final Long clockSkewSec,
                      @Value("${jwt.secret:secret}") final String secret) {
-        //this.secretKey = Encoders.BASE64.encode(secret.getBytes());
         this.issuer = issuer;
         this.expirationSec = expirationSec;
         this.clockSkewSec = clockSkewSec;
         this.clock = DefaultClock.INSTANCE;
 
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         this.secretKey = Encoders.BASE64.encode(key.getEncoded());
 
     }

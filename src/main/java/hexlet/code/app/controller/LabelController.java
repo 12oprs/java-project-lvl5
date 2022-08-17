@@ -1,7 +1,6 @@
 package hexlet.code.app.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.app.dto.LabelDTO;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.service.LabelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,22 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.Map;
+
 
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "${base-url}" + "/labels")
 public class LabelController {
 
-    @Autowired
-    private LabelService service;
-
-    @Autowired
-    private ObjectMapper mapper;
-
     private static final String ONLY_AUTHORIZED = """
                 authentication.isAuthenticated()
             """;
+
+    private final LabelService service;
 
     @Operation(summary = "Get labels")
     @ApiResponses(@ApiResponse(
@@ -57,15 +51,13 @@ public class LabelController {
             @ApiResponse(responseCode = "404", description = "Label not found")
     })
     @GetMapping("/{id}")
-    public Label getLabel(@PathVariable long id) {
-        Label label = null;
+    public Label getLabel(@PathVariable final long id) {
         try {
-            label = service.getLabel(id);
+            return service.getLabel(id);
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
-        return label;
     }
 
     @Operation(summary = "Create label")
@@ -73,14 +65,8 @@ public class LabelController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(ONLY_AUTHORIZED)
-    public Label createLabel(@RequestBody String json) {
-        String name = null;
-        try {
-            name = (String) mapper.readValue(json, Map.class).get("name");
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return service.createLabel(name);
+    public Label createLabel(@RequestBody final LabelDTO dto) {
+        return service.createLabel(dto);
     }
 
     @Operation(summary = "Update label")
@@ -90,15 +76,13 @@ public class LabelController {
     })
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
-    public Label updateLabel(@PathVariable long id, @RequestBody String json) throws Exception {
-        String name = null;
+    public Label updateLabel(@PathVariable final long id, @RequestBody final LabelDTO dto) {
         try {
-            name = (String) mapper.readValue(json, Map.class).get("name");
+            return service.updateLabel(id, dto);
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
-        return service.updateLabel(id, name);
     }
 
     @Operation(summary = "Delete label")
@@ -108,7 +92,7 @@ public class LabelController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
-    public String deleteLabel(@PathVariable long id) {
+    public String deleteLabel(@PathVariable final long id) {
         try {
             return service.deleteLabel(id);
         } catch (Exception e) {

@@ -1,47 +1,46 @@
 package hexlet.code.app.service;
 
+import hexlet.code.app.dto.LabelDTO;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.repository.LabelRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public final class LabelService {
 
-    @Autowired
-    private LabelRepository repository;
+    private final LabelRepository repository;
 
     public Iterable<Label> getLabels() {
         return repository.findAll();
     }
-    public Set<Label> getLabels(Set<Long> labelIds) {
+
+    public Set<Label> getLabels(final Set<Long> labelIds) {
         return repository.findAllByIdIn(labelIds);
     }
 
-    public Label getLabel(long id) throws Exception {
-        return repository.findById(id).orElseThrow(() -> new Exception("Label not found"));
+    public Label getLabel(final long id) {
+        return repository.findById(id).get();
     }
 
-    public Label createLabel(String name) {
-        Label newLabel = new Label(name);
+    public Label createLabel(final LabelDTO dto) {
+        final Label newLabel = Label.builder()
+                .name(dto.getName())
+                .build();
         return repository.save(newLabel);
     }
 
-    public Label updateLabel(long id, String newName) throws Exception {
-        Label updatedLabel = repository.findById(id)
-                .orElseThrow(() -> new Exception("Can't update. Label not found"));
-        updatedLabel.setName(newName);
+    public Label updateLabel(final long id, final LabelDTO dto) {
+        final Label updatedLabel = repository.findById(id).get();
+        updatedLabel.setName(dto.getName());
         return repository.save(updatedLabel);
     }
 
-    public String deleteLabel(long id) throws Exception {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return "Label deleted";
-        }
-        throw new Exception("Can't delete. Label not exist");
+    public String deleteLabel(final long id) {
+        repository.deleteById(id);
+        return "Label deleted";
     }
 }

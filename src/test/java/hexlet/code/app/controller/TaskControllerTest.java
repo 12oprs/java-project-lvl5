@@ -6,10 +6,10 @@ import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.app.TestUtils;
 import hexlet.code.app.config.TestConfig;
 import hexlet.code.app.dto.TaskDTO;
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
-import hexlet.code.app.service.TaskService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Set;
 
 import static hexlet.code.app.config.TestConfig.TEST_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,6 +46,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DataSet("dataset.yml")
 public class TaskControllerTest {
 
+    private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static TaskDTO testTaskDTO;
+
     @Autowired
     MockMvc mockMvc;
 
@@ -57,13 +61,7 @@ public class TaskControllerTest {
     LabelRepository labelRepository;
 
     @Autowired
-    TaskService taskService;
-
-    @Autowired
     TestUtils testUtils;
-
-    private static TaskDTO testTaskDTO;
-    private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
     @BeforeAll
     static void init() throws Exception {
@@ -156,8 +154,10 @@ public class TaskControllerTest {
     //@Disabled
     @Test
     void testTaskFiltration() throws Exception {
-        Task testTask = taskRepository.findById(1L).get();
-        testTask.addLabel(labelRepository.findById(1L).get());
+        final Task testTask = taskRepository.findById(1L).get();
+        Set<Label> labels = testTask.getLabels();
+        labels.add(labelRepository.findById(1L).get());
+        testTask.setLabels(labels);
         taskRepository.save(testTask);
 
         MockHttpServletResponse response = mockMvc

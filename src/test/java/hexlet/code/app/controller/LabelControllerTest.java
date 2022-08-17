@@ -43,6 +43,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DataSet("dataset.yml")
 public class LabelControllerTest {
 
+    private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static Label testLabel;
+    private static Label expectedLabel;
+
+    static ObjectMapper mapper = new ObjectMapper();
+
     @Autowired
     MockMvc mockMvc;
 
@@ -52,16 +58,10 @@ public class LabelControllerTest {
     @Autowired
     TestUtils testUtils;
 
-    static ObjectMapper mapper = new ObjectMapper();
-
-    private static Label testLabel;
-    private static Label expectedLabel;
-    private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
-
     @BeforeAll
     static void init() throws IOException {
-        testLabel = new Label("testLabel");
-        expectedLabel = new Label("testLabel");
+        testLabel = Label.builder().name("testLabel").build();
+        expectedLabel = Label.builder().name("testLabel").build();
     }
 
     @Test

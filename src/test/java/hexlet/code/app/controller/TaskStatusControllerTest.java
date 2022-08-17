@@ -43,6 +43,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DataSet("dataset.yml")
 public class TaskStatusControllerTest {
 
+    private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static TaskStatus testTaskStatus;
+    private static TaskStatus expectedTaskStatus;
+
+    static ObjectMapper mapper = new ObjectMapper();
+
     @Autowired
     MockMvc mockMvc;
 
@@ -52,16 +58,10 @@ public class TaskStatusControllerTest {
     @Autowired
     TestUtils testUtils;
 
-    static ObjectMapper mapper = new ObjectMapper();
-
-    private static TaskStatus testTaskStatus;
-    private static TaskStatus expectedTaskStatus;
-    private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
-
     @BeforeAll
     static void init() throws IOException {
-        testTaskStatus = new TaskStatus("new");
-        expectedTaskStatus = new TaskStatus("new");
+        testTaskStatus = TaskStatus.builder().name("new").build();
+        expectedTaskStatus = TaskStatus.builder().name("new").build();
     }
 
     @Test

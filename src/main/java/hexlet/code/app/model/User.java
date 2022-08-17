@@ -2,8 +2,8 @@ package hexlet.code.app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
-import hexlet.code.app.dto.UserCreationDTO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -23,6 +23,7 @@ import lombok.Setter;
 @Table(name = "users")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -49,13 +50,6 @@ public class User {
     @Column(name = "created_at")
     @CreationTimestamp
     private Date createdAt;
-
-    public User(UserCreationDTO dto) {
-        this.firstName = dto.getFirstName();
-        this.lastName = dto.getLastName();
-        this.email = dto.getEmail();
-        this.password = dto.getPassword();
-    }
 
     public User(final Long newId) {
         this.id = newId;

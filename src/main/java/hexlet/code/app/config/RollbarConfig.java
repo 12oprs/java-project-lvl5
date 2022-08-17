@@ -33,7 +33,7 @@ public class RollbarConfig {
         return rollbar;
     }
 
-    private Config getRollbarConfigs(String accessToken) {
+    private Config getRollbarConfigs(final String accessToken) {
 
         // Reference ConfigBuilder.java for all the properties you can set for Rollbar
         return RollbarSpringConfigBuilder.withAccessToken(accessToken)

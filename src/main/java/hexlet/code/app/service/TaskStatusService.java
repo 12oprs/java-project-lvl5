@@ -1,9 +1,9 @@
 package hexlet.code.app.service;
 
+import hexlet.code.app.dto.TaskStatusDTO;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.repository.TaskStatusRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,33 +12,32 @@ import java.util.List;
 @AllArgsConstructor
 public final class TaskStatusService {
 
-    @Autowired
-    private TaskStatusRepository repository;
+    private  final TaskStatusRepository repository;
 
     public List<TaskStatus> getStatuses() {
         return (List<TaskStatus>) repository.findAll();
     }
 
-    public TaskStatus getTaskStatus(long id) throws Exception {
-        return repository.findById(id).orElseThrow(() -> new Exception("Status not found"));
+    public TaskStatus getTaskStatus(final long id) {
+        return repository.findById(id).get();
     }
 
-    public TaskStatus createTaskStatus(String name) {
-        TaskStatus newStatus = new TaskStatus(name);
+    public TaskStatus createTaskStatus(final TaskStatusDTO dto) {
+        final TaskStatus newStatus = TaskStatus
+                .builder()
+                .name(dto.getName())
+                .build();
         return repository.save(newStatus);
     }
-    public TaskStatus updateTaskStatus(long id, String newName) throws Exception {
-        TaskStatus updatedStatus = repository.findById(id)
-                .orElseThrow(() -> new Exception("Can't update. Status not found"));
-        updatedStatus.setName(newName);
+
+    public TaskStatus updateTaskStatus(final long id, final TaskStatusDTO dto) {
+        final TaskStatus updatedStatus = repository.findById(id).get();
+        updatedStatus.setName(dto.getName());
         return repository.save(updatedStatus);
     }
 
-    public String deleteTaskStatus(long id) throws Exception {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return "Status deleted";
-        }
-        throw new Exception("Can't delete. Status not exist");
+    public String deleteTaskStatus(final long id) {
+        repository.deleteById(id);
+        return "Status deleted";
     }
 }

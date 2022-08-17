@@ -1,16 +1,14 @@
 package hexlet.code.app.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreationDTO extends UserDTO {
+public class LabelDTO {
 
-    private String password;
+    private String name;
 
 }

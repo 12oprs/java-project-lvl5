@@ -2,8 +2,6 @@ package hexlet.code.app.controller;
 
 import hexlet.code.app.dto.TaskDTO;
 import hexlet.code.app.model.Task;
-import hexlet.code.app.repository.TaskRepository;
-import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,16 +31,6 @@ import com.querydsl.core.types.Predicate;
 @RequestMapping(value = "${base-url}" + "/tasks")
 public class TaskController {
 
-
-    @Autowired
-    private TaskService service;
-
-    @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
     private static final String ONLY_AUTHORIZED = """
                 authentication.isAuthenticated()
             """;
@@ -51,6 +38,8 @@ public class TaskController {
     private static final String ONLY_OWNER_BY_ID = """
                 @userRepository.findById(#id).get().getEmail() == authentication.getName()
             """;
+
+    private final TaskService service;
 
     @Operation(summary = "Get tasks")
     @ApiResponses(@ApiResponse(
@@ -60,7 +49,7 @@ public class TaskController {
     )
     @GetMapping
     public Iterable<Task> getTasks(
-            @QuerydslPredicate(root = Task.class, bindings = TaskRepository.class) Predicate predicate) {
+            @QuerydslPredicate(root = Task.class) final Predicate predicate) {
         return service.getTasks(predicate);
     }
 
@@ -70,15 +59,13 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Task not found")
     })
     @GetMapping("/{id}")
-    public Task getTask(@PathVariable long id) {
-        Task task = null;
+    public Task getTask(@PathVariable final long id) {
         try {
-            task = service.getTask(id);
+            return service.getTask(id);
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
-        return task;
     }
 
     @Operation(summary = "Create task")
@@ -86,15 +73,13 @@ public class TaskController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(ONLY_AUTHORIZED)
-    public Task createTask(@RequestBody TaskDTO dto) {
-        Task task = null;
+    public Task createTask(@RequestBody final TaskDTO dto) {
         try {
-            task = service.createTask(dto);
+            return service.createTask(dto);
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
-        return task;
     }
 
     @Operation(summary = "Update task")
@@ -104,15 +89,13 @@ public class TaskController {
     })
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
-    public Task updateTask(@PathVariable long id, @RequestBody TaskDTO dto) throws Exception {
-        Task task = null;
+    public Task updateTask(@PathVariable final long id, @RequestBody final TaskDTO dto) {
         try {
-            task = service.updateTask(id, dto);
+            return service.updateTask(id, dto);
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
-        return task;
     }
 
     @Operation(summary = "Delete task")
@@ -122,7 +105,7 @@ public class TaskController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
-    public String deleteTask(@PathVariable long id) {
+    public String deleteTask(@PathVariable final long id) {
         try {
             return service.deleteTask(id);
         } catch (Exception e) {

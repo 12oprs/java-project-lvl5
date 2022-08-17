@@ -21,7 +21,7 @@ public final class TestUtils {
     @Autowired
     JWTHelper jwtHelper;
 
-    public String getToken(String username) {
+    public String getToken(final String username) {
         final String token = jwtHelper.expiring(Map.of(SPRING_SECURITY_FORM_USERNAME_KEY, username));
         return token;
     }

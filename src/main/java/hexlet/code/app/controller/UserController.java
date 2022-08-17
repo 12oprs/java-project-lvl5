@@ -2,7 +2,6 @@ package hexlet.code.app.controller;
 
 import hexlet.code.app.dto.UserCreationDTO;
 import hexlet.code.app.model.User;
-import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,15 +29,11 @@ import java.util.List;
 @RequestMapping(value = "${base-url}" + "/users")
 public class UserController {
 
-    @Autowired
-    private UserService service;
-
-    @Autowired
-    private UserRepository userRepository;
-
     private static final String ONLY_OWNER_BY_ID = """
-            @userRepository.findById(#id).get().getEmail() == authentication.getName()
-        """;
+                @userRepository.findById(#id).get().getEmail() == authentication.getName()
+            """;
+
+    private final UserService service;
 
     @Operation(summary = "Get users")
     @ApiResponses(@ApiResponse(
@@ -56,24 +50,23 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found"),
             @ApiResponse(responseCode = "404", description = "User not found")
-                    })
+    })
     @GetMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
-    public User getUser(@PathVariable long id) {
-        User user = null;
+    public User getUser(@PathVariable final long id) {
         try {
-            user = service.getUser(id);
+            return service.getUser(id);
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
-        return user;
     }
+
     @Operation(summary = "Create user")
     @ApiResponse(responseCode = "201", description = "User created")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User registration(@RequestBody UserCreationDTO dto) {
+    public User registration(@RequestBody final UserCreationDTO dto) {
         return service.createUser(dto);
     }
 
@@ -84,16 +77,15 @@ public class UserController {
     })
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
-    public User updateUser(@PathVariable long id, @RequestBody UserCreationDTO dto) {
-        User user = null;
+    public User updateUser(@PathVariable final long id, @RequestBody final UserCreationDTO dto) {
         try {
-            user = service.updateUser(id, dto);
+            return service.updateUser(id, dto);
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
-        return user;
     }
+
     @Operation(summary = "Delete user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User deleted"),
@@ -101,7 +93,7 @@ public class UserController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
-    public String deleteUser(@PathVariable long id) {
+    public String deleteUser(@PathVariable final long id) {
         try {
             return service.deleteUser(id);
         } catch (Exception e) {

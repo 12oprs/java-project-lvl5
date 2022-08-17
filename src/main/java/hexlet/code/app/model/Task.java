@@ -1,6 +1,5 @@
 package hexlet.code.app.model;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.Set;
 
@@ -38,18 +37,15 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
-    @Size(min = 1)
+    @NotBlank
     private String name;
 
     private String description;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "taskStatus_id")
     private TaskStatus taskStatus;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
@@ -72,8 +68,8 @@ public class Task {
         this.id = newId;
     }
 
-    public void addLabel(Label label) {
-        this.labels.add(label);
-    }
+    //public void addLabel(Label label) {
+//        this.labels.add(label);
+//    }
 
 }

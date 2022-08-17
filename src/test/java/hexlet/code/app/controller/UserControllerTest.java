@@ -1,8 +1,6 @@
 package hexlet.code.app.controller;
 
-
 import hexlet.code.app.TestUtils;
-import hexlet.code.app.component.JWTHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
@@ -47,30 +45,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DataSet("dataset.yml")
 public final class UserControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
+    private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static UserCreationDTO testUserDTO;
+    private static User expectedUser;
 
     static ObjectMapper mapper = new ObjectMapper();
+
+    @Autowired
+    MockMvc mockMvc;
 
     @Autowired
     UserRepository repository;
 
     @Autowired
-    JWTHelper jwtHelper;
-
-    @Autowired
     TestUtils testUtils;
-
-    private static UserCreationDTO testUserDTO;
-    private static User expectedUser;
-    private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
 
     @BeforeAll
     static void init() throws IOException {
         testUserDTO = mapper.readValue(
                 new File(WORK_DIR + "/src/test/resources/datasets/testUserDTO"),
                 UserCreationDTO.class);
-        expectedUser = new User(testUserDTO);
+        expectedUser = User.builder()
+                .firstName(testUserDTO.getFirstName())
+                .lastName(testUserDTO.getLastName())
+                .email(testUserDTO.getEmail())
+                .password(testUserDTO.getPassword())
+                .build();
     }
 
     @Test
