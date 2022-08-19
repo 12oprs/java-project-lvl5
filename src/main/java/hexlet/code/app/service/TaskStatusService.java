@@ -36,8 +36,7 @@ public final class TaskStatusService {
         return repository.save(updatedStatus);
     }
 
-    public String deleteTaskStatus(final long id) {
+    public void deleteTaskStatus(final long id) {
         repository.deleteById(id);
-        return "Status deleted";
     }
 }

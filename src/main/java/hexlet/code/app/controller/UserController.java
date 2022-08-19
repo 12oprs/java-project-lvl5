@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -54,12 +53,7 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
     public User getUser(@PathVariable final long id) {
-        try {
-            return service.getUser(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return service.getUser(id);
     }
 
     @Operation(summary = "Create user")
@@ -78,12 +72,7 @@ public class UserController {
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
     public User updateUser(@PathVariable final long id, @RequestBody final UserCreationDTO dto) {
-        try {
-            return service.updateUser(id, dto);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return service.updateUser(id, dto);
     }
 
     @Operation(summary = "Delete user")
@@ -93,12 +82,7 @@ public class UserController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
-    public String deleteUser(@PathVariable final long id) {
-        try {
-            return service.deleteUser(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, e.getMessage(), e);
-        }
+    public void deleteUser(@PathVariable final long id) {
+        service.deleteUser(id);
     }
 }

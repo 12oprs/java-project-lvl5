@@ -84,8 +84,7 @@ public final class TaskService {
         return taskRepository.save(updatedTask);
     }
 
-    public String deleteTask(final long id) {
+    public void deleteTask(final long id) {
         taskRepository.deleteById(id);
-        return "Task deleted";
     }
 }

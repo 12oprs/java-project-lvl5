@@ -49,9 +49,8 @@ public final class UserService implements UserDetailsService {
         return repository.save(updatedUser);
     }
 
-    public String deleteUser(final long id) {
+    public void deleteUser(final long id) {
         repository.deleteById(id);
-        return "User deleted";
     }
 
     public String getCurrentUserName() {

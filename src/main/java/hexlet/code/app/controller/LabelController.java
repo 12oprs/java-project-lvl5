@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 
 @AllArgsConstructor
@@ -52,12 +51,7 @@ public class LabelController {
     })
     @GetMapping("/{id}")
     public Label getLabel(@PathVariable final long id) {
-        try {
-            return service.getLabel(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return service.getLabel(id);
     }
 
     @Operation(summary = "Create label")
@@ -77,12 +71,7 @@ public class LabelController {
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
     public Label updateLabel(@PathVariable final long id, @RequestBody final LabelDTO dto) {
-        try {
-            return service.updateLabel(id, dto);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return service.updateLabel(id, dto);
     }
 
     @Operation(summary = "Delete label")
@@ -92,12 +81,7 @@ public class LabelController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
-    public String deleteLabel(@PathVariable final long id) {
-        try {
-            return service.deleteLabel(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, e.getMessage(), e);
-        }
+    public void deleteLabel(@PathVariable final long id) {
+        service.deleteLabel(id);
     }
 }

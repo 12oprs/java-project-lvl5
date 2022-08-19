@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.querydsl.core.types.Predicate;
 
@@ -60,12 +59,7 @@ public class TaskController {
     })
     @GetMapping("/{id}")
     public Task getTask(@PathVariable final long id) {
-        try {
-            return service.getTask(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return service.getTask(id);
     }
 
     @Operation(summary = "Create task")
@@ -74,12 +68,7 @@ public class TaskController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(ONLY_AUTHORIZED)
     public Task createTask(@RequestBody final TaskDTO dto) {
-        try {
-            return service.createTask(dto);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return service.createTask(dto);
     }
 
     @Operation(summary = "Update task")
@@ -90,12 +79,7 @@ public class TaskController {
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
     public Task updateTask(@PathVariable final long id, @RequestBody final TaskDTO dto) {
-        try {
-            return service.updateTask(id, dto);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return service.updateTask(id, dto);
     }
 
     @Operation(summary = "Delete task")
@@ -105,13 +89,8 @@ public class TaskController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
-    public String deleteTask(@PathVariable final long id) {
-        try {
-            return service.deleteTask(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, e.getMessage(), e);
-        }
+    public void deleteTask(@PathVariable final long id) {
+        service.deleteTask(id);
     }
 
 }

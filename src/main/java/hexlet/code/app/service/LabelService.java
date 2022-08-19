@@ -39,8 +39,7 @@ public final class LabelService {
         return repository.save(updatedLabel);
     }
 
-    public String deleteLabel(final long id) {
+    public void deleteLabel(final long id) {
         repository.deleteById(id);
-        return "Label deleted";
     }
 }

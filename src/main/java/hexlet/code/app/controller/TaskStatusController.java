@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -37,12 +36,7 @@ public class TaskStatusController {
 
     @GetMapping("/{id}")
     public TaskStatus getTaskStatus(@PathVariable final long id) {
-        try {
-            return service.getTaskStatus(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return service.getTaskStatus(id);
     }
 
     @PostMapping
@@ -55,22 +49,12 @@ public class TaskStatusController {
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
     public TaskStatus updateTaskStatus(@PathVariable final long id, @RequestBody final TaskStatusDTO dto) {
-        try {
-            return service.updateTaskStatus(id, dto);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return service.updateTaskStatus(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
-    public String deleteTaskStatus(@PathVariable final long id) {
-        try {
-            return service.deleteTaskStatus(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, e.getMessage(), e);
-        }
+    public void deleteTaskStatus(@PathVariable final long id) {
+        service.deleteTaskStatus(id);
     }
 }

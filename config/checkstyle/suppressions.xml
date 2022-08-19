@@ -14,7 +14,8 @@
                     |TaskStatusController.java|
                     |TaskController.java|
                     |LabelController.java|
-                    |Task.java"/>
+                    |Task.java|
+                    |BaseExceptionHandler.java"/>
 
      <suppress checks="JavadocMethod"
               files="RollbarConfig.java"/>
