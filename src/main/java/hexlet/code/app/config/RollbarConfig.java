@@ -24,7 +24,9 @@ public class RollbarConfig {
 
     /**
      * Register a Rollbar bean to configure App with Rollbar.
+     * @return configured rollbar object
      */
+
     @Bean
     public Rollbar rollbar() throws Exception {
         Rollbar rollbar = Rollbar.init(getRollbarConfigs(rollbarToken));

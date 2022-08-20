@@ -44,19 +44,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class LabelControllerTest {
 
     private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
     private static Label testLabel;
     private static Label expectedLabel;
 
-    static ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
-    MockMvc mockMvc;
+    private LabelRepository repository;
 
     @Autowired
-    LabelRepository repository;
-
-    @Autowired
-    TestUtils testUtils;
+    private TestUtils testUtils;
 
     @BeforeAll
     static void init() throws IOException {
@@ -94,7 +94,7 @@ public class LabelControllerTest {
 
 
         MockHttpServletRequestBuilder createRequest = post("/api/labels")
-                .content(mapper.writeValueAsString(testLabel))
+                .content(MAPPER.writeValueAsString(testLabel))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.authorizedRequest(createRequest, "petrov@mail.ru")
@@ -112,7 +112,7 @@ public class LabelControllerTest {
     @Test
     void testUpdateLabel() throws Exception {
         MockHttpServletRequestBuilder updateRequest = put("/api/labels/2")
-                .content(mapper.writeValueAsString(testLabel))
+                .content(MAPPER.writeValueAsString(testLabel))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.authorizedRequest(updateRequest, "petrov@mail.ru")
@@ -140,7 +140,7 @@ public class LabelControllerTest {
     void testUnauthorizedUser() throws Exception {
         MockHttpServletResponse createResponse = mockMvc
                 .perform(post("/api/labels")
-                        .content(mapper.writeValueAsString(testLabel))
+                        .content(MAPPER.writeValueAsString(testLabel))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn()
@@ -148,7 +148,7 @@ public class LabelControllerTest {
 
         MockHttpServletResponse updateResponse = mockMvc
                 .perform(put("/api/labels/2")
-                        .content(mapper.writeValueAsString(testLabel))
+                        .content(MAPPER.writeValueAsString(testLabel))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn()

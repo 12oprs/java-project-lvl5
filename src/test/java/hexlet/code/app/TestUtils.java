@@ -16,10 +16,10 @@ import static org.springframework.security.web.authentication.UsernamePasswordAu
 public final class TestUtils {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    JWTHelper jwtHelper;
+    private JWTHelper jwtHelper;
 
     public String getToken(final String username) {
         final String token = jwtHelper.expiring(Map.of(SPRING_SECURITY_FORM_USERNAME_KEY, username));

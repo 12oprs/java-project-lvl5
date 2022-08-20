@@ -46,23 +46,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public final class UserControllerTest {
 
     private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
     private static UserCreationDTO testUserDTO;
     private static User expectedUser;
 
-    static ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
-    MockMvc mockMvc;
+    private UserRepository repository;
 
     @Autowired
-    UserRepository repository;
-
-    @Autowired
-    TestUtils testUtils;
+    private TestUtils testUtils;
 
     @BeforeAll
     static void init() throws IOException {
-        testUserDTO = mapper.readValue(
+        testUserDTO = MAPPER.readValue(
                 new File(WORK_DIR + "/src/test/resources/datasets/testUserDTO"),
                 UserCreationDTO.class);
         expectedUser = User.builder()
@@ -102,7 +102,7 @@ public final class UserControllerTest {
     void testCreateUser() throws Exception {
         MockHttpServletResponse response = mockMvc
                 .perform(post("/api/users")
-                        .content(mapper.writeValueAsString(testUserDTO))
+                        .content(MAPPER.writeValueAsString(testUserDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -120,7 +120,7 @@ public final class UserControllerTest {
     @Test
     void testUpdateUser() throws Exception {
         MockHttpServletRequestBuilder updateRequest = put("/api/users/2")
-                .content(mapper.writeValueAsString(testUserDTO))
+                .content(MAPPER.writeValueAsString(testUserDTO))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.authorizedRequest(updateRequest, "petrov@mail.ru")
@@ -157,7 +157,7 @@ public final class UserControllerTest {
     void testUpdateUserFail() throws Exception {
         mockMvc
                 .perform(patch("/api/users/3")
-                        .content(mapper.writeValueAsString(testUserDTO))
+                        .content(MAPPER.writeValueAsString(testUserDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())

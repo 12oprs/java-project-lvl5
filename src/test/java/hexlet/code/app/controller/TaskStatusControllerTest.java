@@ -44,19 +44,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TaskStatusControllerTest {
 
     private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
     private static TaskStatus testTaskStatus;
     private static TaskStatus expectedTaskStatus;
 
-    static ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
-    MockMvc mockMvc;
+    private TaskStatusRepository repository;
 
     @Autowired
-    TaskStatusRepository repository;
-
-    @Autowired
-    TestUtils testUtils;
+    private TestUtils testUtils;
 
     @BeforeAll
     static void init() throws IOException {
@@ -94,7 +94,7 @@ public class TaskStatusControllerTest {
 
 
         MockHttpServletRequestBuilder createRequest = post("/api/statuses")
-                .content(mapper.writeValueAsString(testTaskStatus))
+                .content(MAPPER.writeValueAsString(testTaskStatus))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.authorizedRequest(createRequest, "petrov@mail.ru")
@@ -112,7 +112,7 @@ public class TaskStatusControllerTest {
     @Test
     void testUpdateTaskStatus() throws Exception {
         MockHttpServletRequestBuilder updateRequest = put("/api/statuses/2")
-                .content(mapper.writeValueAsString(testTaskStatus))
+                .content(MAPPER.writeValueAsString(testTaskStatus))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.authorizedRequest(updateRequest, "petrov@mail.ru")
@@ -140,7 +140,7 @@ public class TaskStatusControllerTest {
     void testUnauthorizedUser() throws Exception {
         MockHttpServletResponse createResponse = mockMvc
                 .perform(post("/api/statuses")
-                        .content(mapper.writeValueAsString(testTaskStatus))
+                        .content(MAPPER.writeValueAsString(testTaskStatus))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn()
@@ -148,7 +148,7 @@ public class TaskStatusControllerTest {
 
         MockHttpServletResponse updateResponse = mockMvc
                 .perform(put("/api/statuses/2")
-                        .content(mapper.writeValueAsString(testTaskStatus))
+                        .content(MAPPER.writeValueAsString(testTaskStatus))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn()

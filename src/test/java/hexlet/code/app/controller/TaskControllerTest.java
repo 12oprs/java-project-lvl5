@@ -47,25 +47,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TaskControllerTest {
 
     private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
     private static TaskDTO testTaskDTO;
 
     @Autowired
-    MockMvc mockMvc;
-
-    static ObjectMapper mapper = new ObjectMapper();
+    private MockMvc mockMvc;
 
     @Autowired
-    TaskRepository taskRepository;
+    private TaskRepository taskRepository;
 
     @Autowired
-    LabelRepository labelRepository;
+    private LabelRepository labelRepository;
 
     @Autowired
-    TestUtils testUtils;
+    private TestUtils testUtils;
 
     @BeforeAll
     static void init() throws Exception {
-        testTaskDTO = mapper.readValue(
+        testTaskDTO = MAPPER.readValue(
                 new File(WORK_DIR + "/src/test/resources/datasets/testTaskDTO"),
                 TaskDTO.class);
     }
@@ -98,7 +98,7 @@ public class TaskControllerTest {
     @Test
     void testCreateTask() throws Exception {
         MockHttpServletRequestBuilder createRequest = post("/api/tasks")
-                .content(mapper.writeValueAsString(testTaskDTO))
+                .content(MAPPER.writeValueAsString(testTaskDTO))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.authorizedRequest(createRequest, "ivanov@mail.ru")
@@ -116,7 +116,7 @@ public class TaskControllerTest {
     @Test
     void testUpdateTask() throws Exception {
         MockHttpServletRequestBuilder updateRequest = put("/api/tasks/2")
-                .content(mapper.writeValueAsString(testTaskDTO))
+                .content(MAPPER.writeValueAsString(testTaskDTO))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.authorizedRequest(updateRequest, "petrov@mail.ru")

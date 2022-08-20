@@ -8,15 +8,14 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -59,17 +58,13 @@ public class Task {
     private Date createdAt;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @ElementCollection
-    @CollectionTable(name = "task_labels", joinColumns = @JoinColumn(name = "label_id"))
-    @Column(name = "labels")
+    @JoinTable(name = "tasks_labels",
+            joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "label_id", referencedColumnName = "id"))
     private Set<Label> labels;
 
     public Task(final Long newId) {
         this.id = newId;
     }
-
-    //public void addLabel(Label label) {
-//        this.labels.add(label);
-//    }
 
 }
