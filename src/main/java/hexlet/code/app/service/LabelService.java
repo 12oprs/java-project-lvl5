@@ -1,6 +1,6 @@
 package hexlet.code.app.service;
 
-import hexlet.code.app.dto.LabelDTO;
+import hexlet.code.app.dto.LabelDto;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.repository.LabelRepository;
 import lombok.AllArgsConstructor;
@@ -26,14 +26,14 @@ public final class LabelService {
         return repository.findById(id).get();
     }
 
-    public Label createLabel(final LabelDTO dto) {
+    public Label createLabel(final LabelDto dto) {
         final Label newLabel = Label.builder()
                 .name(dto.getName())
                 .build();
         return repository.save(newLabel);
     }
 
-    public Label updateLabel(final long id, final LabelDTO dto) {
+    public Label updateLabel(final long id, final LabelDto dto) {
         final Label updatedLabel = repository.findById(id).get();
         updatedLabel.setName(dto.getName());
         return repository.save(updatedLabel);

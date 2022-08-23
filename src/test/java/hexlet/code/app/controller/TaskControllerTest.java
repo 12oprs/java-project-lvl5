@@ -5,7 +5,7 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.app.TestUtils;
 import hexlet.code.app.config.TestConfig;
-import hexlet.code.app.dto.TaskDTO;
+import hexlet.code.app.dto.TaskDto;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.repository.LabelRepository;
@@ -49,7 +49,7 @@ public class TaskControllerTest {
     private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static TaskDTO testTaskDTO;
+    private static TaskDto testTaskDto;
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,9 +65,9 @@ public class TaskControllerTest {
 
     @BeforeAll
     static void init() throws Exception {
-        testTaskDTO = MAPPER.readValue(
+        testTaskDto = MAPPER.readValue(
                 new File(WORK_DIR + "/src/test/resources/datasets/testTaskDTO"),
-                TaskDTO.class);
+                TaskDto.class);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class TaskControllerTest {
     @Test
     void testCreateTask() throws Exception {
         MockHttpServletRequestBuilder createRequest = post("/api/tasks")
-                .content(MAPPER.writeValueAsString(testTaskDTO))
+                .content(MAPPER.writeValueAsString(testTaskDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.authorizedRequest(createRequest, "ivanov@mail.ru")
@@ -109,14 +109,14 @@ public class TaskControllerTest {
                 .getResponse();
 
         assertEquals(3, taskRepository.count());
-        Task actualTask = taskRepository.findByName(testTaskDTO.getName()).get();
-        assertEquals(testTaskDTO.getDescription(), actualTask.getDescription());
+        Task actualTask = taskRepository.findByName(testTaskDto.getName()).get();
+        assertEquals(testTaskDto.getDescription(), actualTask.getDescription());
     }
 
     @Test
     void testUpdateTask() throws Exception {
         MockHttpServletRequestBuilder updateRequest = put("/api/tasks/2")
-                .content(MAPPER.writeValueAsString(testTaskDTO))
+                .content(MAPPER.writeValueAsString(testTaskDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.authorizedRequest(updateRequest, "petrov@mail.ru")
@@ -126,7 +126,7 @@ public class TaskControllerTest {
 
         assertEquals(2, taskRepository.count());
         Task actualTask = taskRepository.findById(2L).get();
-        assertEquals(testTaskDTO.getDescription(), actualTask.getDescription());
+        assertEquals(testTaskDto.getDescription(), actualTask.getDescription());
     }
 
     @Test

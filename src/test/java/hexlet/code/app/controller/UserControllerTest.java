@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.app.config.TestConfig;
-import hexlet.code.app.dto.UserCreationDTO;
+import hexlet.code.app.dto.UserCreationDto;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -48,7 +48,7 @@ public final class UserControllerTest {
     private static final String WORK_DIR = Paths.get(".").toAbsolutePath().normalize().toString();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static UserCreationDTO testUserDTO;
+    private static UserCreationDto testUserDTO;
     private static User expectedUser;
 
     @Autowired
@@ -64,7 +64,7 @@ public final class UserControllerTest {
     static void init() throws IOException {
         testUserDTO = MAPPER.readValue(
                 new File(WORK_DIR + "/src/test/resources/datasets/testUserDTO"),
-                UserCreationDTO.class);
+                UserCreationDto.class);
         expectedUser = User.builder()
                 .firstName(testUserDTO.getFirstName())
                 .lastName(testUserDTO.getLastName())

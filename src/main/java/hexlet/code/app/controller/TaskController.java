@@ -1,6 +1,6 @@
 package hexlet.code.app.controller;
 
-import hexlet.code.app.dto.TaskDTO;
+import hexlet.code.app.dto.TaskDto;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.querydsl.core.types.Predicate;
+
+import javax.validation.Valid;
 
 
 @AllArgsConstructor
@@ -67,7 +69,7 @@ public class TaskController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(ONLY_AUTHORIZED)
-    public Task createTask(@RequestBody final TaskDTO dto) {
+    public Task createTask(@RequestBody @Valid final TaskDto dto) {
         return service.createTask(dto);
     }
 
@@ -78,7 +80,7 @@ public class TaskController {
     })
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
-    public Task updateTask(@PathVariable final long id, @RequestBody final TaskDTO dto) {
+    public Task updateTask(@PathVariable final long id, @RequestBody @Valid final TaskDto dto) {
         return service.updateTask(id, dto);
     }
 

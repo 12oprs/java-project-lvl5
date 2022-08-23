@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hexlet.code.app.component.JWTHelper;
-import hexlet.code.app.dto.LoginDTO;
+import hexlet.code.app.dto.LoginDto;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +37,7 @@ public final class JWTAuthenticationFilter extends UsernamePasswordAuthenticatio
     @Override
     public Authentication attemptAuthentication(final HttpServletRequest request,
                                                 final HttpServletResponse response) throws AuthenticationException {
-        final LoginDTO loginData = getLoginData(request);
+        final LoginDto loginData = getLoginData(request);
         final var authRequest = new UsernamePasswordAuthenticationToken(
                 loginData.getEmail(),
                 loginData.getPassword()
@@ -46,12 +46,12 @@ public final class JWTAuthenticationFilter extends UsernamePasswordAuthenticatio
         return getAuthenticationManager().authenticate(authRequest);
     }
 
-    private LoginDTO getLoginData(final HttpServletRequest request) throws AuthenticationException {
+    private LoginDto getLoginData(final HttpServletRequest request) throws AuthenticationException {
         try {
             final String json = request.getReader()
                     .lines()
                     .collect(Collectors.joining());
-            return MAPPER.readValue(json, LoginDTO.class);
+            return MAPPER.readValue(json, LoginDto.class);
         } catch (IOException e) {
             throw new BadCredentialsException("Can't extract login data from request");
         }

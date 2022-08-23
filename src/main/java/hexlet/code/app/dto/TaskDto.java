@@ -12,7 +12,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskDTO {
+public class TaskDto {
     private String name;
     private String description;
     private Long taskStatusId;

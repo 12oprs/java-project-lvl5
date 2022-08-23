@@ -1,6 +1,6 @@
 package hexlet.code.app.service;
 
-import hexlet.code.app.dto.UserCreationDTO;
+import hexlet.code.app.dto.UserCreationDto;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ public final class UserService implements UserDetailsService {
         return repository.findById(id).get();
     }
 
-    public User createUser(final UserCreationDTO dto) {
+    public User createUser(final UserCreationDto dto) {
         final User user = new User();
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
@@ -40,7 +40,7 @@ public final class UserService implements UserDetailsService {
         return repository.save(user);
     }
 
-    public User updateUser(final long id, final UserCreationDTO dto) {
+    public User updateUser(final long id, final UserCreationDto dto) {
         final User updatedUser = repository.findById(id).get();
         updatedUser.setFirstName(dto.getFirstName());
         updatedUser.setLastName(dto.getLastName());

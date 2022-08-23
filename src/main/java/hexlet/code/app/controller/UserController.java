@@ -1,6 +1,6 @@
 package hexlet.code.app.controller;
 
-import hexlet.code.app.dto.UserCreationDTO;
+import hexlet.code.app.dto.UserCreationDto;
 import hexlet.code.app.model.User;
 import hexlet.code.app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -60,7 +61,7 @@ public class UserController {
     @ApiResponse(responseCode = "201", description = "User created")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User registration(@RequestBody final UserCreationDTO dto) {
+    public User registration(@RequestBody @Valid final UserCreationDto dto) {
         return service.createUser(dto);
     }
 
@@ -71,7 +72,7 @@ public class UserController {
     })
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_OWNER_BY_ID)
-    public User updateUser(@PathVariable final long id, @RequestBody final UserCreationDTO dto) {
+    public User updateUser(@PathVariable final long id, @RequestBody @Valid final UserCreationDto dto) {
         return service.updateUser(id, dto);
     }
 

@@ -1,6 +1,6 @@
 package hexlet.code.app.controller;
 
-import hexlet.code.app.dto.TaskStatusDTO;
+import hexlet.code.app.dto.TaskStatusDto;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.service.TaskStatusService;
 import lombok.AllArgsConstructor;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -42,13 +43,13 @@ public class TaskStatusController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(ONLY_AUTHORIZED)
-    public TaskStatus createTaskStatus(@RequestBody final TaskStatusDTO dto) {
+    public TaskStatus createTaskStatus(@RequestBody @Valid final TaskStatusDto dto) {
         return service.createTaskStatus(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
-    public TaskStatus updateTaskStatus(@PathVariable final long id, @RequestBody final TaskStatusDTO dto) {
+    public TaskStatus updateTaskStatus(@PathVariable final long id, @RequestBody @Valid final TaskStatusDto dto) {
         return service.updateTaskStatus(id, dto);
     }
 

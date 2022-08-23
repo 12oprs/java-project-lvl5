@@ -1,15 +1,18 @@
 package hexlet.code.app.service;
 
 import com.querydsl.core.types.Predicate;
-import hexlet.code.app.dto.TaskDTO;
+import hexlet.code.app.dto.TaskDto;
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.TaskRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -29,11 +32,6 @@ public final class TaskService {
     }
 
     public Iterable<Task> getTasks(final Predicate predicate) {
-        if (predicate == null) {
-            final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            final User user = (User) auth.getPrincipal();
-            return taskRepository.findAllByAuthorId(user.getId());
-        }
         return taskRepository.findAll(predicate);
     }
 
@@ -41,50 +39,54 @@ public final class TaskService {
         return taskRepository.findById(id).get();
     }
 
-    public Task createTask(final TaskDTO dto) {
+    public Task createTask(final TaskDto dto) {
         final User author = userService.getCurrentUser();
-        final TaskStatus taskStatus = statusService.getTaskStatus(dto.getTaskStatusId());
-        final Task newTask = Task.builder()
-                .name(dto.getName())
-                .taskStatus(taskStatus)
-                .author(author)
-                .build();
-        if (dto.getDescription() != null) {
-            newTask.setDescription(dto.getDescription());
-        }
-        if (dto.getExecutorId() != null) {
-            newTask.setExecutor(userService.getUser(dto.getExecutorId()));
-        }
-        if (dto.getLabelIds() != null) {
-            newTask.setLabels(labelService.getLabels(dto.getLabelIds()));
-        }
+        final Task newTask = fromDto(dto);
+        newTask.setAuthor(author);
         return taskRepository.save(newTask);
     }
 
-    public Task updateTask(final long id, final TaskDTO dto) {
+    public Task updateTask(final long id, final TaskDto dto) {
         final Task updatedTask = taskRepository.findById(id).get();
-        if (dto.getName() != null) {
-            updatedTask.setName(dto.getName());
-        }
-        if (dto.getDescription() != null) {
-            updatedTask.setDescription(dto.getDescription());
-        }
-        if (dto.getTaskStatusId() != null) {
-            updatedTask.setTaskStatus(statusService.getTaskStatus(dto.getTaskStatusId()));
-        }
-        if (dto.getAuthorId() != null) {
-            updatedTask.setAuthor(userService.getUser(dto.getAuthorId()));
-        }
-        if (dto.getExecutorId() != null) {
-            updatedTask.setExecutor(userService.getUser(dto.getExecutorId()));
-        }
-        if (dto.getLabelIds() != null) {
-            updatedTask.setLabels(labelService.getLabels(dto.getLabelIds()));
-        }
+        merge(updatedTask, dto);
         return taskRepository.save(updatedTask);
     }
 
     public void deleteTask(final long id) {
         taskRepository.deleteById(id);
+    }
+
+    private void merge(final Task task, final TaskDto dto) {
+        final Task newTask = fromDto(dto);
+        task.setName(newTask.getName() == null ? task.getName() : newTask.getName());
+        task.setDescription(newTask.getDescription() == null ? task.getDescription() : newTask.getDescription());
+        task.setTaskStatus(newTask.getTaskStatus() == null ? task.getTaskStatus() : newTask.getTaskStatus());
+        task.setAuthor(newTask.getAuthor() == null ? task.getAuthor() : newTask.getAuthor());
+        task.setExecutor(newTask.getExecutor() == null ? task.getExecutor() : newTask.getExecutor());
+        task.setLabels(newTask.getLabels().isEmpty() ? task.getLabels() : newTask.getLabels());
+    }
+
+    private Task fromDto(final TaskDto dto) {
+        final TaskStatus taskStatus = Optional.ofNullable(dto.getTaskStatusId())
+                .map(TaskStatus::new)
+                .orElse(null);
+        final User author = Optional.ofNullable(dto.getAuthorId())
+                .map(User::new)
+                .orElse(null);
+        final User executor = Optional.ofNullable(dto.getExecutorId())
+                .map(User::new)
+                .orElse(null);
+        final Set<Label> labels = new HashSet<>();
+        Optional.ofNullable(dto.getLabelIds())
+                .orElse(new HashSet<>())
+                .forEach(id -> labels.add(new Label(id)));
+        return Task.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .taskStatus(taskStatus)
+                .author(author)
+                .executor(executor)
+                .labels(labels)
+                .build();
     }
 }

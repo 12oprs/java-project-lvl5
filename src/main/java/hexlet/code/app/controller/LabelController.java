@@ -1,6 +1,6 @@
 package hexlet.code.app.controller;
 
-import hexlet.code.app.dto.LabelDTO;
+import hexlet.code.app.dto.LabelDto;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.service.LabelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 
 @AllArgsConstructor
@@ -59,7 +61,7 @@ public class LabelController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize(ONLY_AUTHORIZED)
-    public Label createLabel(@RequestBody final LabelDTO dto) {
+    public Label createLabel(@RequestBody @Valid final LabelDto dto) {
         return service.createLabel(dto);
     }
 
@@ -70,7 +72,7 @@ public class LabelController {
     })
     @PutMapping("/{id}")
     @PreAuthorize(ONLY_AUTHORIZED)
-    public Label updateLabel(@PathVariable final long id, @RequestBody final LabelDTO dto) {
+    public Label updateLabel(@PathVariable final long id, @RequestBody @Valid final LabelDto dto) {
         return service.updateLabel(id, dto);
     }
 
