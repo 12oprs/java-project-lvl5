@@ -58,12 +58,12 @@ public final class TaskService {
 
     private void merge(final Task task, final TaskDto dto) {
         final Task newTask = fromDto(dto);
-        task.setName(newTask.getName() == null ? task.getName() : newTask.getName());
-        task.setDescription(newTask.getDescription() == null ? task.getDescription() : newTask.getDescription());
-        task.setTaskStatus(newTask.getTaskStatus() == null ? task.getTaskStatus() : newTask.getTaskStatus());
-        task.setAuthor(newTask.getAuthor() == null ? task.getAuthor() : newTask.getAuthor());
-        task.setExecutor(newTask.getExecutor() == null ? task.getExecutor() : newTask.getExecutor());
-        task.setLabels(newTask.getLabels().isEmpty() ? task.getLabels() : newTask.getLabels());
+        task.setName(newTask.getName());
+        task.setDescription(newTask.getDescription());
+        task.setTaskStatus(newTask.getTaskStatus());
+        task.setAuthor(newTask.getAuthor());
+        task.setExecutor(newTask.getExecutor());
+        task.setLabels(newTask.getLabels());
     }
 
     private Task fromDto(final TaskDto dto) {
