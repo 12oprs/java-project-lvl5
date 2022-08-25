@@ -24,7 +24,7 @@ public final class UserService implements UserDetailsService {
     private final PasswordEncoder encoder;
 
     public List<User> getUsers() {
-        return (List<User>) repository.findAll();
+        return repository.findAll();
     }
 
     public User getUser(final long id) {
